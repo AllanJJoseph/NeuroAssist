@@ -86,16 +86,8 @@ export function PillNav({ items, className = '', initialLoadAnimation = true }: 
                 }}
                 className={[
                   'inline-flex h-10 items-center justify-center rounded-full px-4 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:px-5',
-                  isActive ? 'text-white' : 'bg-white text-black hover:text-black',
+                  isActive ? '!text-white' : '!text-black hover:!text-black',
                 ].join(' ')}
-                onMouseEnter={(event) => {
-                  if (isActive) return
-                  event.currentTarget.style.color = '#000000'
-                }}
-                onMouseLeave={(event) => {
-                  if (isActive) return
-                  event.currentTarget.style.color = '#000000'
-                }}
               >
                 {item.label}
               </Link>
