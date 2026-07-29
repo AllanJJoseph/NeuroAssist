@@ -6,11 +6,51 @@ This file is the working handoff log for the NeuroAssist hackathon frontend. It 
 
 - Project scaffolded as a React + TypeScript + Vite application.
 - Tailwind CSS is configured and the app uses a clean medical-style UI theme.
-- React Router is wired for a multi-step workflow.
+- React Router is wired for a multi-step workflow plus informational pages.
 - Mock workflow state is centralized in a shared context.
 - The main end-to-end frontend flow is implemented and working.
-- `npm run build` and `npm run lint` both pass.
+- `npm run build` passes.
 - The dev server can be started with `npm run dev`.
+
+## Current Architecture
+
+- `src/main.tsx` mounts `BrowserRouter` and the workflow provider.
+- `src/App.tsx` owns the route table and wraps every page in the shared app shell.
+- `src/components/layout/` contains the global shell, navbar, footer, page container, section heading, and feature card wrappers.
+- `src/components/ui/` contains the base design-system primitives plus `PrimaryButton` and `SecondaryButton` wrappers.
+- `src/hooks/` currently contains `useTimeout` for the simulated processing redirect.
+- `src/utils/routes.ts` centralizes route constants and the top-level navigation items.
+- `src/types/navigation.ts` stores the shared navigation link type.
+
+## Pages
+
+- `LandingPage` keeps the original hero and workflow entry screen.
+- `PatientPage` collects structured intake data.
+- `ScanUploadPage` handles scan upload and preview.
+- `ProcessingPage` simulates staged analysis and auto-redirects.
+- `ResultsPage` presents the analysis dashboard.
+- `ReportPage` renders the report view.
+- `AboutPage` and `ContactPage` are professional placeholders.
+
+## Routes
+
+- `/` -> `LandingPage`
+- `/patient` -> `PatientPage`
+- `/scan` -> `ScanUploadPage`
+- `/processing` -> `ProcessingPage`
+- `/results` -> `ResultsPage`
+- `/report` -> `ReportPage`
+- `/about` -> `AboutPage`
+- `/contact` -> `ContactPage`
+
+## Components
+
+- `Navbar` renders the app header and top navigation.
+- `Footer` is used on the informational pages.
+- `PageContainer` provides the shared page width and spacing wrapper.
+- `SectionHeading` standardizes placeholder page headings.
+- `FeatureCard` provides the shared card pattern for placeholder content.
+- `PrimaryButton` and `SecondaryButton` wrap the base button primitive for consistent usage.
 
 ## What Has Been Built
 
@@ -18,7 +58,7 @@ This file is the working handoff log for the NeuroAssist hackathon frontend. It 
 
 - Replaced the default Vite starter content with the NeuroAssist app shell.
 - Added `BrowserRouter` and a shared workflow provider in `src/main.tsx`.
-- Reworked `src/App.tsx` into a route-driven workflow container.
+- Reworked `src/App.tsx` into a route-driven workflow container with informational pages.
 
 ### 2. Workflow Pages
 
@@ -30,6 +70,8 @@ Implemented the full demo flow:
 - AI processing screen
 - Results dashboard
 - Clinical report page
+- About page
+- Contact page
 
 ### 3. Shared State and Mock Analysis
 
@@ -69,7 +111,9 @@ Created a small shadcn-style component layer in `src/components/ui/` including:
 Added reusable layout and visual components in `src/components/layout/` and `src/components/visuals/`:
 
 - App shell with workflow stepper
+- Navbar and footer navigation
 - Page header component
+- Shared page wrappers and cards for reusable page scaffolding
 - Risk meter
 - Brain scan preview
 - Contribution bars
@@ -88,14 +132,25 @@ Added reusable layout and visual components in `src/components/layout/` and `src
 - [src/App.tsx](src/App.tsx)
 - [src/lib/workflow.ts](src/lib/workflow.ts)
 - [src/context/workflow-context.tsx](src/context/workflow-context.tsx)
+- [src/utils/routes.ts](src/utils/routes.ts)
+- [src/types/navigation.ts](src/types/navigation.ts)
 - [src/components/layout/AppShell.tsx](src/components/layout/AppShell.tsx)
+- [src/components/layout/Navbar.tsx](src/components/layout/Navbar.tsx)
+- [src/components/layout/Footer.tsx](src/components/layout/Footer.tsx)
+- [src/components/layout/PageContainer.tsx](src/components/layout/PageContainer.tsx)
+- [src/components/layout/SectionHeading.tsx](src/components/layout/SectionHeading.tsx)
+- [src/components/layout/FeatureCard.tsx](src/components/layout/FeatureCard.tsx)
 - [src/components/layout/PageHeader.tsx](src/components/layout/PageHeader.tsx)
 - [src/pages/LandingPage.tsx](src/pages/LandingPage.tsx)
+- [src/pages/PatientPage.tsx](src/pages/PatientPage.tsx)
 - [src/pages/PatientInfoPage.tsx](src/pages/PatientInfoPage.tsx)
 - [src/pages/ScanUploadPage.tsx](src/pages/ScanUploadPage.tsx)
 - [src/pages/ProcessingPage.tsx](src/pages/ProcessingPage.tsx)
 - [src/pages/ResultsPage.tsx](src/pages/ResultsPage.tsx)
+- [src/pages/ReportPage.tsx](src/pages/ReportPage.tsx)
 - [src/pages/ClinicalReportPage.tsx](src/pages/ClinicalReportPage.tsx)
+- [src/pages/AboutPage.tsx](src/pages/AboutPage.tsx)
+- [src/pages/ContactPage.tsx](src/pages/ContactPage.tsx)
 
 ## How to Run
 
@@ -118,13 +173,15 @@ npm run build
 - The current architecture is ready for a FastAPI backend to be added later without major restructuring.
 - The report download button is a placeholder and does not yet generate a PDF.
 - The upload preview currently uses local browser file objects only.
+- The new route constants in `src/utils/routes.ts` should be reused for any future navigation work.
+- `useTimeout` is the preferred place for timed navigation behavior.
 
 ## Suggested Next Steps
 
 1. Add a mock or real API client layer for FastAPI integration.
 2. Replace the simulated processing flow with API-backed request/response handling.
 3. Implement real PDF export for the clinical report.
-4. Add stronger form validation and a nicer patient summary review step if needed.
+4. Wire the placeholder About and Contact pages to real project or clinic data.
 5. Swap the temporary mock analysis with backend-driven results once the API exists.
 
 ## Handoff Summary
