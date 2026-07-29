@@ -2,13 +2,46 @@
 
 This file is the working handoff log for the NeuroAssist hackathon frontend. It is meant to help the next teammate or agent understand what has already been built, how the app is structured, and what should happen next.
 
-## Current Status
+## Recent Updates
 
+### Features implemented
+- Removed "Mock clinical workflow" button from the Navbar.
+- Removed the global Footer component completely.
+- Refactored WorkflowStepper to use a single moving black pill highlighting the active page.
+- Created reusable fixed BackButton and NextButton components for workflow navigation.
+- Added "CT Scan" and "MRI" options for upload with monochrome styling.
+- Removed local preview text/spacing from the ScanUpload page.
+- Fixed the "Download Report" button functionality and removed empty space.
+- Ensured strictly monochrome theming (white background, black text/borders, removed gradient background).
+
+### Files modified
+- `src/components/layout/AppShell.tsx`
+- `src/components/layout/Navbar.tsx`
+- `src/components/layout/WorkflowStepper.tsx`
+- `src/pages/AboutPage.tsx`
+- `src/pages/ContactPage.tsx`
+- `src/pages/ScanUploadPage.tsx`
+- `src/pages/ReportPage.tsx`
+- `src/index.css`
+- `tailwind.config.js`
+
+### Files created
+- `src/components/layout/BackButton.tsx`
+- `src/components/layout/NextButton.tsx`
+
+### Architecture changes
+- Centralized `BackButton` and `NextButton` navigation inside `WorkflowStepper` instead of floating independently.
+
+### Remaining TODOs
+- Connect backend API (FastAPI) to frontend UI.
+
+## Current Status
 - Project scaffolded as a React + TypeScript + Vite application.
-- Tailwind CSS is configured and the app uses a clean medical-style UI theme.
+- Tailwind CSS is configured and the app now uses a black-and-white visual theme.
 - React Router is wired for a multi-step workflow plus informational pages.
 - Mock workflow state is centralized in a shared context.
 - The main end-to-end frontend flow is implemented and working.
+- The animated pill navigation, workflow stepper, back actions, and report download control are restored.
 - `npm run build` passes.
 - The dev server can be started with `npm run dev`.
 
@@ -17,7 +50,8 @@ This file is the working handoff log for the NeuroAssist hackathon frontend. It 
 - `src/main.tsx` mounts `BrowserRouter` and the workflow provider.
 - `src/App.tsx` owns the route table and wraps every page in the shared app shell.
 - `src/components/layout/` contains the global shell, navbar, footer, page container, section heading, and feature card wrappers.
-- `src/components/ui/` contains the base design-system primitives plus `PrimaryButton` and `SecondaryButton` wrappers.
+- `src/components/ui/` contains the base design-system primitives used by the shared pages.
+- `src/components/layout/` also includes `PillNav`, `WorkflowStepper`, `ThemeToggle`, and `PageHeader` for the restored navigation experience.
 - `src/hooks/` currently contains `useTimeout` for the simulated processing redirect.
 - `src/utils/routes.ts` centralizes route constants and the top-level navigation items.
 - `src/types/navigation.ts` stores the shared navigation link type.
@@ -111,7 +145,7 @@ Created a small shadcn-style component layer in `src/components/ui/` including:
 Added reusable layout and visual components in `src/components/layout/` and `src/components/visuals/`:
 
 - App shell with workflow stepper
-- Navbar and footer navigation
+- Navbar, pill navigation, and theme toggle
 - Page header component
 - Shared page wrappers and cards for reusable page scaffolding
 - Risk meter
@@ -120,10 +154,10 @@ Added reusable layout and visual components in `src/components/layout/` and `src
 
 ### 6. Styling and Theming
 
-- Replaced the default starter CSS with a medical-themed global style in `src/index.css`.
+- Replaced the default starter CSS with a monochrome global style in `src/index.css`.
 - Added Tailwind configuration in `tailwind.config.js`.
 - Added PostCSS configuration in `postcss.config.js`.
-- Used a restrained clinical palette with white backgrounds, blue accents, gray surfaces, rounded cards, and soft shadows.
+- Used a restrained black-and-white palette with neutral surfaces, rounded cards, and soft shadows.
 - Added IBM Plex Sans for a more purposeful healthcare-friendly feel.
 
 ## Important Files
@@ -136,6 +170,8 @@ Added reusable layout and visual components in `src/components/layout/` and `src
 - [src/types/navigation.ts](src/types/navigation.ts)
 - [src/components/layout/AppShell.tsx](src/components/layout/AppShell.tsx)
 - [src/components/layout/Navbar.tsx](src/components/layout/Navbar.tsx)
+- [src/components/layout/PillNav.tsx](src/components/layout/PillNav.tsx)
+- [src/components/layout/WorkflowStepper.tsx](src/components/layout/WorkflowStepper.tsx)
 - [src/components/layout/Footer.tsx](src/components/layout/Footer.tsx)
 - [src/components/layout/PageContainer.tsx](src/components/layout/PageContainer.tsx)
 - [src/components/layout/SectionHeading.tsx](src/components/layout/SectionHeading.tsx)
@@ -171,7 +207,7 @@ npm run build
 - The app is frontend-only right now and uses mock data.
 - Authentication, database access, permissions, and hospital management are intentionally not implemented.
 - The current architecture is ready for a FastAPI backend to be added later without major restructuring.
-- The report download button is a placeholder and does not yet generate a PDF.
+- The report download button now exports a text report from the client; swap in real PDF generation if needed.
 - The upload preview currently uses local browser file objects only.
 - The new route constants in `src/utils/routes.ts` should be reused for any future navigation work.
 - `useTimeout` is the preferred place for timed navigation behavior.
