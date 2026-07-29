@@ -4,6 +4,7 @@ import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { useWorkflow } from '../context/workflow-context'
+import { ROUTES } from '../utils/routes'
 
 const highlights = [
   {
@@ -29,7 +30,7 @@ export function LandingPage() {
 
   const handleStart = () => {
     resetWorkflow()
-    navigate('/patient')
+    navigate(ROUTES.patient)
   }
 
   return (
@@ -54,7 +55,7 @@ export function LandingPage() {
                 Start Analysis
                 <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button size="lg" variant="outline" onClick={() => navigate('/results')}>
+              <Button size="lg" variant="outline" onClick={() => navigate(ROUTES.results)}>
                 View Demo Results
               </Button>
             </div>
