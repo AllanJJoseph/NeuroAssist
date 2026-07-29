@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { FileUp, ImagePlus, UploadCloud } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { PageHeader } from '../components/layout/PageHeader'
-import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Progress } from '../components/ui/progress'
@@ -63,19 +62,21 @@ export function ScanUploadPage() {
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex gap-3">
-              {(['CT', 'MRI'] as const).map((modality) => (
+              {[
+                { label: 'CT Scan', value: 'CT' },
+                { label: 'MRI', value: 'MRI' }
+              ].map(({ label, value }) => (
                 <button
-                  key={modality}
+                  key={value}
                   type="button"
-                  onClick={() => updateScanField('modality', modality)}
+                  aria-pressed={scan.modality === value}
+                  onClick={() => updateScanField('modality', value as 'CT' | 'MRI')}
                   className={[
-                    'rounded-full border px-4 py-2 text-sm font-medium transition',
-                    scan.modality === modality
-                      ? 'border-medical-200 bg-medical-50 text-medical-700'
-                      : 'border-steel-200 bg-white text-steel-600 hover:bg-steel-50',
+                    'rounded-full border border-black px-4 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white',
+                    scan.modality === value ? 'bg-black text-white' : 'bg-white text-black hover:bg-gray-100',
                   ].join(' ')}
                 >
-                  {modality}
+                  {label}
                 </button>
               ))}
             </div>
@@ -93,10 +94,10 @@ export function ScanUploadPage() {
               }}
               className={[
                 'flex min-h-72 flex-col items-center justify-center rounded-3xl border-2 border-dashed p-8 text-center transition',
-                dragActive ? 'border-medical-400 bg-medical-50/60' : 'border-steel-200 bg-steel-50/60',
+                dragActive ? 'border-steel-900 bg-steel-200' : 'border-steel-900 bg-steel-50/60',
               ].join(' ')}
             >
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-medical-700 shadow-sm">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-steel-900 bg-white text-steel-900 shadow-sm">
                 <UploadCloud className="h-8 w-8" />
               </div>
               <div className="mt-5 space-y-2">
@@ -156,22 +157,22 @@ export function ScanUploadPage() {
             </div>
             <CardContent className="space-y-4 p-6">
               {localPreview ? (
-                <div className="overflow-hidden rounded-3xl border border-steel-200 bg-steel-50">
+                <div className="overflow-hidden rounded-3xl border border-steel-900 bg-steel-50">
                   <img src={localPreview} alt="Uploaded brain scan preview" className="h-72 w-full object-cover" />
                 </div>
               ) : (
-                <div className="flex h-72 items-center justify-center rounded-3xl border border-steel-200 bg-steel-50 text-steel-500">
+                <div className="flex h-72 items-center justify-center rounded-3xl border border-steel-900 bg-steel-50 text-steel-500">
                   Upload a scan to preview it here.
                 </div>
               )}
-
-              <Badge variant="secondary">Preview remains local to the current session</Badge>
             </CardContent>
           </Card>
 
-          <Button className="w-full" size="lg" disabled={!scan.fileName} onClick={handleAnalyze}>
-            Analyze scan
-          </Button>
+          <div className="flex flex-col gap-3">
+            <Button className="w-full" size="lg" disabled={!scan.fileName} onClick={handleAnalyze}>
+              Analyze scan
+            </Button>
+          </div>
         </div>
       </div>
     </div>
