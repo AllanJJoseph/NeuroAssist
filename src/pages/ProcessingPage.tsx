@@ -6,6 +6,8 @@ import { Badge } from '../components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Progress } from '../components/ui/progress'
 import { useWorkflow } from '../context/workflow-context'
+import { useTimeout } from '../hooks/useTimeout'
+import { ROUTES } from '../utils/routes'
 
 const processingMessages = [
   'Analyzing patient information...',
@@ -29,15 +31,12 @@ export function ProcessingPage() {
       setStep((current) => Math.min(processingMessages.length - 1, current + 1))
     }, 900)
 
-    const timeout = window.setTimeout(() => {
-      navigate('/results')
-    }, 4700)
-
     return () => {
       window.clearInterval(interval)
-      window.clearTimeout(timeout)
     }
   }, [analysis, finalizeAnalysis, navigate])
+
+  useTimeout(() => navigate(ROUTES.results), 4700)
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">

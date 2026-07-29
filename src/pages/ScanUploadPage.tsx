@@ -7,6 +7,7 @@ import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Progress } from '../components/ui/progress'
 import { useWorkflow } from '../context/workflow-context'
+import { ROUTES } from '../utils/routes'
 
 export function ScanUploadPage() {
   const navigate = useNavigate()
@@ -43,7 +44,7 @@ export function ScanUploadPage() {
 
   const handleAnalyze = () => {
     finalizeAnalysis()
-    navigate('/processing')
+    navigate(ROUTES.processing)
   }
 
   return (
@@ -169,7 +170,7 @@ export function ScanUploadPage() {
           </Card>
 
           <Button className="w-full" size="lg" disabled={!scan.fileName} onClick={handleAnalyze}>
-            Analyze scan and patient data
+            Analyze scan
           </Button>
         </div>
       </div>

@@ -9,6 +9,7 @@ import { ContributionBars } from '../components/visuals/ContributionBars'
 import { RiskMeter } from '../components/visuals/RiskMeter'
 import { Separator } from '../components/ui/separator'
 import { useWorkflow } from '../context/workflow-context'
+import { ROUTES } from '../utils/routes'
 
 export function ResultsPage() {
   const navigate = useNavigate()
@@ -16,12 +17,12 @@ export function ResultsPage() {
 
   useEffect(() => {
     if (!analysis) {
-      navigate('/patient', { replace: true })
+      navigate(ROUTES.patient, { replace: true })
     }
   }, [analysis, navigate])
 
   if (!analysis) {
-    return <Navigate to="/patient" replace />
+    return <Navigate to={ROUTES.patient} replace />
   }
 
   return (
@@ -32,11 +33,11 @@ export function ResultsPage() {
         description="A clinical-style view of the mock AI output, emphasizing probability, lesion context, and next considerations."
         action={
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button variant="outline" onClick={() => navigate('/scan')}>
-              Edit scan
+            <Button variant="outline" onClick={() => navigate(ROUTES.scan)}>
+              Back
             </Button>
-            <Button onClick={() => navigate('/report')}>
-              Open clinical report
+            <Button onClick={() => navigate(ROUTES.report)}>
+              Generate Report
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
