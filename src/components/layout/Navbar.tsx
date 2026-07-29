@@ -1,20 +1,14 @@
-import { Link, NavLink, useLocation } from 'react-router-dom'
-import { ArrowRight, ShieldCheck } from 'lucide-react'
-import { Badge } from '../ui/badge'
-import { workflowSteps } from '../../lib/workflow'
+import { Link } from 'react-router-dom'
+import { ShieldCheck } from 'lucide-react'
 import { NAVIGATION_LINKS } from '../../utils/routes'
+import { PillNav } from './PillNav'
 
 export function Navbar() {
-  const location = useLocation()
-  const activeIndex = workflowSteps.findIndex((step) => step.path === location.pathname)
-  const safeIndex = activeIndex < 0 ? 0 : activeIndex
-  const showStepper = workflowSteps.some((step) => step.path === location.pathname)
-
   return (
-    <header className="border-b border-steel-200/80 bg-white/85 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+    <header className="border-b border-steel-200/80 bg-white/95 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-medical-600 text-white shadow-soft">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-steel-900 bg-white text-steel-900 shadow-soft">
             <ShieldCheck className="h-6 w-6" />
           </div>
           <div>
@@ -23,54 +17,16 @@ export function Navbar() {
           </div>
         </Link>
 
-        <div className="flex items-center gap-3">
-          <nav className="hidden rounded-full border border-steel-200 bg-white/80 px-1 py-1 text-sm text-steel-600 md:flex">
-            {NAVIGATION_LINKS.map((link) => (
-              <NavLink
-                key={link.path}
-                to={link.path}
-                className={({ isActive }) =>
-                  [
-                    'rounded-full px-3 py-1.5 font-medium transition',
-                    isActive ? 'bg-medical-50 text-medical-700' : 'hover:bg-steel-100 hover:text-steel-900',
-                  ].join(' ')
-                }
-              >
-                {link.label}
-              </NavLink>
-            ))}
-          </nav>
-
-          <Badge variant="secondary" className="hidden sm:inline-flex">
-            Mock clinical workflow
-          </Badge>
+        <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:justify-end">
+          <PillNav
+            className="w-full sm:w-auto"
+            items={NAVIGATION_LINKS.map((link) => ({
+              label: link.label,
+              href: link.path,
+            }))}
+          />
         </div>
       </div>
-
-      {showStepper ? (
-        <div className="mx-auto max-w-7xl px-4 pb-4 sm:px-6 lg:px-8">
-          <div className="grid gap-2 rounded-2xl border border-steel-200 bg-steel-50/85 p-2 sm:grid-cols-6">
-            {workflowSteps.map((step, index) => {
-              const isActive = index === safeIndex
-              const isComplete = index < safeIndex
-
-              return (
-                <div
-                  key={step.path}
-                  className={[
-                    'flex items-center justify-between rounded-xl px-3 py-2 text-sm transition',
-                    isActive ? 'bg-white text-medical-700 shadow-sm' : 'text-steel-500',
-                    isComplete ? 'bg-white/80 text-steel-700' : '',
-                  ].join(' ')}
-                >
-                  <span className="font-medium">{step.label}</span>
-                  <ArrowRight className={["h-4 w-4", isActive ? 'text-medical-600' : 'text-steel-300'].join(' ')} />
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      ) : null}
     </header>
   )
 }
