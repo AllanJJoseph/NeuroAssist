@@ -11,7 +11,7 @@ export function FeatureCard({ title, description, icon }: FeatureCardProps) {
   return (
     <Card>
       <CardHeader>
-        {icon ? <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-medical-50 text-medical-700">{icon}</div> : null}
+        {icon ? <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-steel-900 bg-white text-steel-900">{icon}</div> : null}
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
