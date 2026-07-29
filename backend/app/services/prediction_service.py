@@ -1,8 +1,8 @@
 from datetime import UTC, datetime
 
-from ..schemas.common import RiskLevel, StrokeType
-from ..schemas.prediction import PatientRiskRequest, PredictionResponse
-from ..utils.mock_logic import (
+from app.schemas.common import RiskLevel, StrokeType
+from app.schemas.prediction import PatientRiskRequest, PredictionResponse
+from app.utils.mock_logic import (
     build_patient_summary,
     build_recommended_next_steps,
     clamp,

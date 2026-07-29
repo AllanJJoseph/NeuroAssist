@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
 
-from ....schemas.report import ClinicalReportRequest, ClinicalReportResponse
-from ....services.report_service import generate_clinical_report
+from app.schemas.report import ClinicalReportRequest, ClinicalReportResponse
+from app.services.report_service import generate_clinical_report
 
 router = APIRouter(tags=['report'])
 

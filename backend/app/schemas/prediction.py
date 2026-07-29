@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from .common import Gender, RiskFactor, RiskLevel, SmokingHistory, StrokeType
+from app.schemas.common import Gender, RiskFactor, RiskLevel, SmokingHistory, StrokeType
 
 
 class PatientRiskRequest(BaseModel):

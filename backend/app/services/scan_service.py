@@ -3,11 +3,11 @@ from pathlib import Path
 
 from fastapi import HTTPException, UploadFile, status
 
-from ..core.config import Settings
-from ..schemas.common import ScanModality, StrokeType
-from ..schemas.scan import ScanAnalysisRequest, ScanAnalysisResponse, ScanUploadResponse
-from ..utils.file_utils import build_upload_destination, sanitize_filename, validate_scan_upload
-from ..utils.mock_logic import build_scan_summary, clamp
+from app.core.config import Settings
+from app.schemas.common import ScanModality, StrokeType
+from app.schemas.scan import ScanAnalysisRequest, ScanAnalysisResponse, ScanUploadResponse
+from app.utils.file_utils import build_upload_destination, sanitize_filename, validate_scan_upload
+from app.utils.mock_logic import build_scan_summary, clamp
 
 MODEL_VERSION = 'mock-scan-analyzer-v1'
 

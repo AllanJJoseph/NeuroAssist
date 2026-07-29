@@ -1,8 +1,8 @@
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from ..schemas.common import RiskFactor
-from ..schemas.report import ClinicalReportRequest, ClinicalReportResponse
+from app.schemas.common import RiskFactor
+from app.schemas.report import ClinicalReportRequest, ClinicalReportResponse
 
 REPORT_DISCLAIMER = (
     'NeuroAssist is a clinical decision support tool only. The output is mock data for a hackathon build '

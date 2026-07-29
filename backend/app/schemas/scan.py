@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from .common import ScanModality, StrokeType
+from app.schemas.common import ScanModality, StrokeType
 
 
 class ScanUploadResponse(BaseModel):

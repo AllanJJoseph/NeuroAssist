@@ -3,9 +3,9 @@ from uuid import uuid4
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from .common import RiskFactor
-from .prediction import PatientRiskRequest, PredictionResponse
-from .scan import ScanAnalysisResponse
+from app.schemas.common import RiskFactor
+from app.schemas.prediction import PatientRiskRequest, PredictionResponse
+from app.schemas.scan import ScanAnalysisResponse
 
 
 class ClinicalReportRequest(BaseModel):

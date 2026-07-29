@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from ..schemas.common import Gender, RiskFactor, RiskLevel, ScanModality, SmokingHistory, StrokeType
-from ..schemas.prediction import PatientRiskRequest
-from ..schemas.scan import ScanAnalysisRequest
+from app.schemas.common import Gender, RiskFactor, RiskLevel, ScanModality, SmokingHistory, StrokeType
+from app.schemas.prediction import PatientRiskRequest
+from app.schemas.scan import ScanAnalysisRequest
 
 
 def clamp(value: float, minimum: float, maximum: float) -> float:

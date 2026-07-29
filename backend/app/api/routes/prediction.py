@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
 
-from ....schemas.prediction import PatientRiskRequest, PredictionResponse
-from ....services.prediction_service import generate_prediction
+from app.schemas.prediction import PatientRiskRequest, PredictionResponse
+from app.services.prediction_service import generate_prediction
 
 router = APIRouter(prefix='', tags=['prediction'])
 

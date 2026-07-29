@@ -4,8 +4,8 @@ from uuid import uuid4
 
 from fastapi import HTTPException, UploadFile, status
 
-from ..core.config import Settings
-from ..schemas.common import ScanModality
+from app.core.config import Settings
+from app.schemas.common import ScanModality
 
 ALLOWED_MIME_TYPES = {
     'image/png',
