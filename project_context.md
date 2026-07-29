@@ -130,3 +130,58 @@ npm run build
 ## Handoff Summary
 
 The app is in a usable demo state. A new teammate can open the repo, run the app, and continue by wiring backend services, improving validation, or polishing the report/export flow.
+
+---
+
+# NeuroAssist Backend Context
+
+This section tracks the FastAPI backend work that was added after the frontend handoff notes above.
+
+## Current Status
+
+- Backend scaffolded under `backend/` as a modular FastAPI project.
+- Pydantic request and response models are implemented for every endpoint.
+- Mock AI services are separated from the API layer so real ML models can replace them later without changing the contract.
+- Upload handling saves files into `backend/uploads/` with validation and size checks.
+- Automatic Swagger docs are available at `/docs` once the backend is running.
+- The backend package compiles successfully with `python -m compileall backend/app`.
+
+## Implemented Endpoints
+
+- `GET /` returns a JSON health message and API version.
+- `POST /predict` accepts structured patient data and returns mock stroke risk results.
+- `POST /upload-scan` accepts multipart scan uploads, validates file type, saves the file, and returns the stored filename.
+- `POST /analyze-scan` returns mock imaging analysis including stroke type, confidence, lesion location, and a placeholder heatmap path.
+- `POST /generate-report` returns a structured clinical report with patient summary, AI findings, risk factors, suggested considerations, confidence, and disclaimer.
+
+## Backend File Layout
+
+- `backend/app/main.py` creates the FastAPI app, CORS setup, and error handlers.
+- `backend/app/core/config.py` contains environment-driven settings and upload path configuration.
+- `backend/app/api/` contains the router and endpoint modules.
+- `backend/app/schemas/` contains the Pydantic models and enums.
+- `backend/app/services/` contains the mock AI logic for prediction, scan analysis, and report generation.
+- `backend/app/utils/` contains shared scoring, file validation, and upload helpers.
+- `backend/uploads/` is the persisted upload target.
+
+## Backend Run Instructions
+
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+## Notes For The Next Backend Teammate
+
+- The API contract is intentionally stable and mock-driven so the service layer can later call real ML models or FastAPI dependencies without route changes.
+- The upload endpoint currently supports common image formats and DICOM-like files; tighten or expand that list once the real imaging flow is defined.
+- The report endpoint expects nested patient, prediction, and scan-analysis payloads so it can stay stateless.
+- If the frontend starts calling the backend, the CORS defaults already allow `localhost:5173`.
+
+## Suggested Next Steps
+
+1. Replace the mock service functions with real model inference adapters.
+2. Add persistent storage or object storage for uploaded scan files if needed.
+3. Add automated tests for request validation and endpoint contracts.
+4. Add a small frontend API client that points to these endpoints.
