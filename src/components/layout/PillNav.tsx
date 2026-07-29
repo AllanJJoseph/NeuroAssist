@@ -11,11 +11,10 @@ export type PillNavItem = {
 export interface PillNavProps {
   items: PillNavItem[]
   className?: string
-  hoveredPillTextColor?: string
   initialLoadAnimation?: boolean
 }
 
-export function PillNav({ items, className = '', hoveredPillTextColor = '#111111', initialLoadAnimation = true }: PillNavProps) {
+export function PillNav({ items, className = '', initialLoadAnimation = true }: PillNavProps) {
   const location = useLocation()
   const navRef = useRef<HTMLElement | null>(null)
   const pillRef = useRef<HTMLSpanElement | null>(null)
@@ -70,8 +69,8 @@ export function PillNav({ items, className = '', hoveredPillTextColor = '#111111
   }, [initialLoadAnimation])
 
   return (
-    <nav ref={navRef} aria-label="Primary" className={`relative rounded-full border border-steel-900 bg-white px-1 py-1 shadow-sm ${className}`}>
-      <span ref={pillRef} aria-hidden="true" className="pointer-events-none absolute inset-y-1 left-0 rounded-full bg-steel-900 shadow-soft" />
+    <nav ref={navRef} aria-label="Primary" className={`relative rounded-full border border-black bg-white px-1 py-1 shadow-sm ${className}`}>
+      <span ref={pillRef} aria-hidden="true" className="pointer-events-none absolute inset-y-1 left-0 rounded-full bg-black shadow-soft" />
       <ul className="relative z-10 flex items-center gap-1" role="list">
         {items.map((item, index) => {
           const isActive = index === activeIndex
@@ -86,16 +85,16 @@ export function PillNav({ items, className = '', hoveredPillTextColor = '#111111
                   itemRefs.current[index] = element
                 }}
                 className={[
-                  'inline-flex h-10 items-center justify-center rounded-full px-4 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-steel-900 focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:px-5',
-                  isActive ? 'text-white' : 'text-steel-600 hover:text-steel-900',
+                  'inline-flex h-10 items-center justify-center rounded-full px-4 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white sm:px-5',
+                  isActive ? 'text-white' : 'bg-white text-black hover:text-black',
                 ].join(' ')}
                 onMouseEnter={(event) => {
                   if (isActive) return
-                  event.currentTarget.style.color = hoveredPillTextColor
+                  event.currentTarget.style.color = '#000000'
                 }}
                 onMouseLeave={(event) => {
                   if (isActive) return
-                  event.currentTarget.style.color = '#525252'
+                  event.currentTarget.style.color = '#000000'
                 }}
               >
                 {item.label}

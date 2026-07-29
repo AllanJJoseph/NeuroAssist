@@ -1,7 +1,7 @@
 import { ArrowLeft, Brain, FileScan, Stethoscope } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { FeatureCard } from '../components/layout/FeatureCard'
-import { Footer } from '../components/layout/Footer'
+
 import { PageContainer } from '../components/layout/PageContainer'
 import { SectionHeading } from '../components/layout/SectionHeading'
 import { SecondaryButton } from '../components/ui/SecondaryButton'
@@ -49,7 +49,6 @@ export function AboutPage() {
           ))}
         </div>
       </PageContainer>
-      <Footer />
     </>
   )
 }
