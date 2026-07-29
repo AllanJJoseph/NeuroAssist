@@ -38,7 +38,7 @@ export function LandingPage() {
       <section className="relative overflow-hidden rounded-[2rem] border border-steel-900 bg-white px-6 py-10 shadow-card sm:px-10 sm:py-12 lg:px-14 lg:py-16">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(0,0,0,0.06),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(0,0,0,0.04),transparent_28%)]" />
 
-        <div className="relative grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+        <div className="relative grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
           <div className="space-y-6">
             <Badge className="inline-flex">Clinical decision support for stroke triage</Badge>
             <div className="space-y-4">
