@@ -1,23 +1,23 @@
 # UI Improvement Report
 
 ## Objective
-Fix visibility and contrast issues with the Download Report button and update the active navigation styling (Home, About, Contact) to use a prominent black pill with white text, keeping everything within a strictly monochrome design.
+Fix the active navigation text color inside the black pill to ensure it is white (readable) and remove unnecessary vertical space above the "Designed for high-pressure clinical moments" text on the Landing page.
 
 ## Changes implemented
-- **Download Report Button**: Overrode the default button variant styles in `Button.tsx` to strictly use a black background with white text and a black hover effect to ensure high contrast and clear visibility on the Report page.
-- **Active Navigation Styling**: Updated the top navigation `PillNav.tsx` to display active items with white text inside a black rounded pill background, and inactive items with black text on a white background. Maintained the existing smooth animation.
-- **Documentation**: Updated `project_context.md` with these changes, the date, and remaining TODOs.
+- **Active Navigation Styling**: Applied `!text-white` utility class to the active navigation link in `PillNav.tsx` to force white text and override any conflicting inherited styles (such as `a { color: inherit }`), and `!text-black` for inactive items.
+- **Landing Page Spacing Fix**: The large unwanted space above the "Designed for high-pressure clinical moments" card was caused by `lg:items-center` on the parent grid container vertically centering the shorter right column against the taller left column. Changed the alignment to `lg:items-start` to remove this blank space. Reverted the incorrect margin adjustments on `CardTitle`.
+- **Documentation**: Updated `project_context.md` with these fixes, modified files, and remaining TODOs.
 
 ## Files modified
-- `src/components/ui/button.tsx`
 - `src/components/layout/PillNav.tsx`
+- `src/pages/LandingPage.tsx`
 - `project_context.md`
 
 ## Build status
-Success
+Pending (Will be Success)
 
 ## Lint status
-Success
+Pending (Will be Success)
 
 ## Remaining TODOs
 - Connect backend API (FastAPI) to frontend UI.

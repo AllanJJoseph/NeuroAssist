@@ -7,8 +7,9 @@ This file is the working handoff log for the NeuroAssist hackathon frontend. It 
 ### Date of update: July 30, 2026
 
 ### Features implemented
+- **Active navigation text color fix**: Fixed PillNav active text color by applying `!text-white` to guarantee the white color overrides any conflicting CSS hierarchy (like `a { color: inherit }`), and `!text-black` for inactive items.
+- **Landing page spacing fix**: Removed the unwanted large vertical space above the "Designed for high-pressure clinical moments" card by changing the grid parent alignment from `lg:items-center` to `lg:items-start`, eliminating the empty space caused by vertical centering against the taller left column. Reverted the incorrect `CardTitle` margin fix.
 - **Download Report button visibility fix**: explicitly defined default button variant as high contrast black background with white text, overriding previous light styling.
-- **Active navigation styling update**: top navigation (Home, About, Contact) modified so the active page is inside a BLACK rounded pill with WHITE text, while inactive pages have a WHITE background with BLACK text.
 - Removed "Mock clinical workflow" button from the Navbar.
 - Removed the global Footer component completely.
 - Refactored WorkflowStepper to use a single moving black pill highlighting the active page.
@@ -24,6 +25,7 @@ This file is the working handoff log for the NeuroAssist hackathon frontend. It 
 - `src/components/layout/WorkflowStepper.tsx`
 - `src/components/layout/PillNav.tsx`
 - `src/components/ui/button.tsx`
+- `src/pages/LandingPage.tsx`
 - `src/pages/AboutPage.tsx`
 - `src/pages/ContactPage.tsx`
 - `src/pages/ScanUploadPage.tsx`
