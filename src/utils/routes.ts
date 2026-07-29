@@ -16,3 +16,5 @@ export const NAVIGATION_LINKS: NavigationLink[] = [
   { label: 'About', path: ROUTES.about },
   { label: 'Contact', path: ROUTES.contact },
 ]
+
+export const WORKFLOW_ROUTES = [ROUTES.patient, ROUTES.scan, ROUTES.processing, ROUTES.results, ROUTES.report]
