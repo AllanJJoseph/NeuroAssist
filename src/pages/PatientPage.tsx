@@ -130,10 +130,8 @@ export function PatientPage() {
                         type="button"
                         onClick={() => toggleSymptom(symptom)}
                         className={[
-                          'rounded-full border px-3 py-2 text-sm font-medium transition',
-                          selected
-                            ? 'border-medical-200 bg-medical-50 text-medical-700 shadow-sm'
-                            : 'border-steel-200 bg-white text-steel-600 hover:bg-steel-50',
+                            'rounded-full border border-steel-900 px-3 py-2 text-sm font-medium transition',
+                            selected ? 'bg-steel-900 text-white shadow-sm' : 'bg-white text-steel-900 hover:bg-steel-100',
                         ].join(' ')}
                       >
                         {symptom}
@@ -162,7 +160,7 @@ export function PatientPage() {
               </CardContent>
             </Card>
 
-            <Card className="bg-medical-50/70">
+            <Card className="bg-white">
               <CardContent className="space-y-4 p-6">
                 <div>
                   <Badge>Intake snapshot</Badge>
@@ -187,9 +185,6 @@ export function PatientPage() {
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-          <Button type="button" variant="outline" onClick={() => navigate(ROUTES.home)}>
-            Back
-          </Button>
           <Button type="submit">Continue</Button>
         </div>
       </form>
@@ -211,13 +206,10 @@ function Toggle({ label, checked, onChange }: { label: string; checked: boolean;
     <button
       type="button"
       onClick={() => onChange(!checked)}
-      className={[
-        'flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-left text-sm font-medium transition',
-        checked ? 'border-medical-200 bg-white text-steel-900 shadow-sm' : 'border-steel-200 bg-steel-50 text-steel-600 hover:bg-white',
-      ].join(' ')}
+      className="flex items-center justify-between gap-3 rounded-2xl border border-steel-900 bg-white px-4 py-3 text-left text-sm font-medium text-steel-900 transition hover:bg-steel-100"
     >
       <span>{label}</span>
-      <span className={checked ? 'text-medical-600' : 'text-steel-300'}>{checked ? 'On' : 'Off'}</span>
+      <span className="text-steel-500">{checked ? 'On' : 'Off'}</span>
     </button>
   )
 }

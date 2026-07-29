@@ -53,9 +53,9 @@ export function ProcessingPage() {
             <CardDescription>Each stage mirrors a backend call that will later be connected to FastAPI services.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="rounded-3xl border border-steel-200 bg-steel-50 px-5 py-5">
+            <div className="rounded-3xl border border-steel-900 bg-steel-50 px-5 py-5">
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-medical-700 shadow-sm">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-steel-900 bg-white text-steel-900 shadow-sm">
                   <Loader2 className="h-5 w-5 animate-spin" />
                 </div>
                 <div>
@@ -77,10 +77,10 @@ export function ProcessingPage() {
                     key={message}
                     className={[
                       'flex items-center gap-4 rounded-2xl border px-4 py-4 transition',
-                      active ? 'border-medical-200 bg-white shadow-sm' : 'border-steel-200 bg-steel-50/70 text-steel-400',
+                      active ? 'border-steel-900 bg-white shadow-sm' : 'border-steel-900 bg-white text-steel-400',
                     ].join(' ')}
                   >
-                    <div className={['flex h-10 w-10 items-center justify-center rounded-full', active ? 'bg-medical-50 text-medical-700' : 'bg-white text-steel-300'].join(' ')}>
+                    <div className={['flex h-10 w-10 items-center justify-center rounded-full border border-steel-900', active ? 'bg-steel-900 text-white' : 'bg-white text-steel-500'].join(' ')}>
                       {index === 0 ? <ClipboardList className="h-4 w-4" /> : index === 1 ? <Activity className="h-4 w-4" /> : index === 2 ? <BrainCircuit className="h-4 w-4" /> : index === 3 ? <Sparkles className="h-4 w-4" /> : <FileSpreadsheet className="h-4 w-4" />}
                     </div>
                     <div className="text-sm font-medium">{message}</div>
@@ -92,30 +92,30 @@ export function ProcessingPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-steel-950 text-white">
+        <Card className="bg-white text-steel-900">
           <CardHeader>
-            <Badge variant="secondary" className="w-fit bg-white/10 text-white ring-white/15">Workflow status</Badge>
-            <CardTitle className="text-white">Background processing in progress</CardTitle>
-            <CardDescription className="text-steel-300">The UI advances automatically to the results view after the simulated processing completes.</CardDescription>
+            <Badge variant="secondary" className="w-fit">Workflow status</Badge>
+            <CardTitle>Background processing in progress</CardTitle>
+            <CardDescription>The UI advances automatically to the results view after the simulated processing completes.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-              <div className="text-sm font-semibold uppercase tracking-[0.18em] text-steel-300">Scan modality</div>
+            <div className="rounded-3xl border border-steel-900 bg-white p-5">
+              <div className="text-sm font-semibold uppercase tracking-[0.18em] text-steel-500">Scan modality</div>
               <div className="mt-2 text-lg font-semibold">{scan.modality}</div>
             </div>
 
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-              <div className="text-sm font-semibold uppercase tracking-[0.18em] text-steel-300">Transition</div>
-              <div className="mt-2 text-sm leading-6 text-steel-200">
+            <div className="rounded-3xl border border-steel-900 bg-white p-5">
+              <div className="text-sm font-semibold uppercase tracking-[0.18em] text-steel-500">Transition</div>
+              <div className="mt-2 text-sm leading-6 text-steel-600">
                 Preparing mock inference outputs, clinical risk drivers, and the report payload for the next screen.
               </div>
             </div>
 
-            <div className="flex items-center gap-3 rounded-3xl border border-medical-400/30 bg-medical-500/10 p-5 text-medical-50">
+            <div className="flex items-center gap-3 rounded-3xl border border-steel-900 bg-white p-5 text-steel-900">
               <Sparkles className="h-5 w-5" />
               <div>
                 <div className="font-semibold">Explanations enabled</div>
-                <div className="text-sm text-medical-100">Risk factors and imaging cues are surfaced for the clinician.</div>
+                <div className="text-sm text-steel-600">Risk factors and imaging cues are surfaced for the clinician.</div>
               </div>
             </div>
           </CardContent>

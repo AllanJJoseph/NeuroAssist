@@ -9,7 +9,7 @@ export function RiskMeter({ value, label }: RiskMeterProps) {
   const dashOffset = circumference - (Math.min(100, Math.max(0, value)) / 100) * circumference
 
   return (
-    <div className="flex items-center gap-5 rounded-3xl border border-steel-200 bg-white p-5 shadow-card">
+    <div className="flex items-center gap-5 rounded-3xl border border-steel-900 bg-white p-5 shadow-card">
       <div className="relative h-32 w-32 shrink-0">
         <svg viewBox="0 0 140 140" className="h-32 w-32 -rotate-90">
           <circle cx="70" cy="70" r={radius} className="fill-none stroke-steel-100" strokeWidth="14" />
@@ -17,7 +17,7 @@ export function RiskMeter({ value, label }: RiskMeterProps) {
             cx="70"
             cy="70"
             r={radius}
-            className="fill-none stroke-medical-600 transition-all"
+            className="fill-none stroke-steel-900 transition-all"
             strokeWidth="14"
             strokeLinecap="round"
             strokeDasharray={circumference}

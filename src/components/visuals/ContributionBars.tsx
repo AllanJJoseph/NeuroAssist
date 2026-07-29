@@ -16,11 +16,8 @@ export function ContributionBars({ items }: ContributionBarsProps) {
             <span className="font-medium text-steel-700">{item.label}</span>
             <span className="text-steel-500">{item.value}</span>
           </div>
-          <div className="h-2.5 overflow-hidden rounded-full bg-steel-100">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-medical-500 to-medical-600"
-              style={{ width: `${(item.value / maxValue) * 100}%` }}
-            />
+          <div className="h-2.5 overflow-hidden rounded-full border border-steel-900 bg-white">
+            <div className="h-full rounded-full bg-steel-900" style={{ width: `${(item.value / maxValue) * 100}%` }} />
           </div>
         </div>
       ))}
