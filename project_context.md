@@ -2,15 +2,99 @@
 
 This file is the working handoff log for the NeuroAssist hackathon frontend. It is meant to help the next teammate or agent understand what has already been built, how the app is structured, and what should happen next.
 
-## Current Status
+## Recent Updates
 
+### Date of update: July 30, 2026
+
+### Features implemented
+- **Active navigation text color fix**: Fixed PillNav active text color by applying `!text-white` to guarantee the white color overrides any conflicting CSS hierarchy (like `a { color: inherit }`), and `!text-black` for inactive items.
+- **Landing page spacing fix**: Removed the unwanted large vertical space above the "Designed for high-pressure clinical moments" card by changing the grid parent alignment from `lg:items-center` to `lg:items-start`, eliminating the empty space caused by vertical centering against the taller left column. Reverted the incorrect `CardTitle` margin fix.
+- **Download Report button visibility fix**: explicitly defined default button variant as high contrast black background with white text, overriding previous light styling.
+- Removed "Mock clinical workflow" button from the Navbar.
+- Removed the global Footer component completely.
+- Refactored WorkflowStepper to use a single moving black pill highlighting the active page.
+- Created reusable fixed BackButton and NextButton components for workflow navigation.
+- Added "CT Scan" and "MRI" options for upload with monochrome styling.
+- Removed local preview text/spacing from the ScanUpload page.
+- Fixed the "Download Report" button functionality and removed empty space.
+- Ensured strictly monochrome theming (white background, black text/borders, removed gradient background).
+
+### Files modified
+- `src/components/layout/AppShell.tsx`
+- `src/components/layout/Navbar.tsx`
+- `src/components/layout/WorkflowStepper.tsx`
+- `src/components/layout/PillNav.tsx`
+- `src/components/ui/button.tsx`
+- `src/pages/LandingPage.tsx`
+- `src/pages/AboutPage.tsx`
+- `src/pages/ContactPage.tsx`
+- `src/pages/ScanUploadPage.tsx`
+- `src/pages/ReportPage.tsx`
+- `src/index.css`
+- `tailwind.config.js`
+- `project_context.md`
+
+
+### Files created
+- `src/components/layout/BackButton.tsx`
+- `src/components/layout/NextButton.tsx`
+
+### Architecture changes
+- Centralized `BackButton` and `NextButton` navigation inside `WorkflowStepper` instead of floating independently.
+
+### Remaining TODOs
+- Connect backend API (FastAPI) to frontend UI.
+
+## Current Status
 - Project scaffolded as a React + TypeScript + Vite application.
-- Tailwind CSS is configured and the app uses a clean medical-style UI theme.
-- React Router is wired for a multi-step workflow.
+- Tailwind CSS is configured and the app now uses a black-and-white visual theme.
+- React Router is wired for a multi-step workflow plus informational pages.
 - Mock workflow state is centralized in a shared context.
 - The main end-to-end frontend flow is implemented and working.
-- `npm run build` and `npm run lint` both pass.
+- The animated pill navigation, workflow stepper, back actions, and report download control are restored.
+- `npm run build` passes.
 - The dev server can be started with `npm run dev`.
+
+## Current Architecture
+
+- `src/main.tsx` mounts `BrowserRouter` and the workflow provider.
+- `src/App.tsx` owns the route table and wraps every page in the shared app shell.
+- `src/components/layout/` contains the global shell, navbar, footer, page container, section heading, and feature card wrappers.
+- `src/components/ui/` contains the base design-system primitives used by the shared pages.
+- `src/components/layout/` also includes `PillNav`, `WorkflowStepper`, `ThemeToggle`, and `PageHeader` for the restored navigation experience.
+- `src/hooks/` currently contains `useTimeout` for the simulated processing redirect.
+- `src/utils/routes.ts` centralizes route constants and the top-level navigation items.
+- `src/types/navigation.ts` stores the shared navigation link type.
+
+## Pages
+
+- `LandingPage` keeps the original hero and workflow entry screen.
+- `PatientPage` collects structured intake data.
+- `ScanUploadPage` handles scan upload and preview.
+- `ProcessingPage` simulates staged analysis and auto-redirects.
+- `ResultsPage` presents the analysis dashboard.
+- `ReportPage` renders the report view.
+- `AboutPage` and `ContactPage` are professional placeholders.
+
+## Routes
+
+- `/` -> `LandingPage`
+- `/patient` -> `PatientPage`
+- `/scan` -> `ScanUploadPage`
+- `/processing` -> `ProcessingPage`
+- `/results` -> `ResultsPage`
+- `/report` -> `ReportPage`
+- `/about` -> `AboutPage`
+- `/contact` -> `ContactPage`
+
+## Components
+
+- `Navbar` renders the app header and top navigation.
+- `Footer` is used on the informational pages.
+- `PageContainer` provides the shared page width and spacing wrapper.
+- `SectionHeading` standardizes placeholder page headings.
+- `FeatureCard` provides the shared card pattern for placeholder content.
+- `PrimaryButton` and `SecondaryButton` wrap the base button primitive for consistent usage.
 
 ## What Has Been Built
 
@@ -18,7 +102,7 @@ This file is the working handoff log for the NeuroAssist hackathon frontend. It 
 
 - Replaced the default Vite starter content with the NeuroAssist app shell.
 - Added `BrowserRouter` and a shared workflow provider in `src/main.tsx`.
-- Reworked `src/App.tsx` into a route-driven workflow container.
+- Reworked `src/App.tsx` into a route-driven workflow container with informational pages.
 
 ### 2. Workflow Pages
 
@@ -30,6 +114,8 @@ Implemented the full demo flow:
 - AI processing screen
 - Results dashboard
 - Clinical report page
+- About page
+- Contact page
 
 ### 3. Shared State and Mock Analysis
 
@@ -69,17 +155,19 @@ Created a small shadcn-style component layer in `src/components/ui/` including:
 Added reusable layout and visual components in `src/components/layout/` and `src/components/visuals/`:
 
 - App shell with workflow stepper
+- Navbar, pill navigation, and theme toggle
 - Page header component
+- Shared page wrappers and cards for reusable page scaffolding
 - Risk meter
 - Brain scan preview
 - Contribution bars
 
 ### 6. Styling and Theming
 
-- Replaced the default starter CSS with a medical-themed global style in `src/index.css`.
+- Replaced the default starter CSS with a monochrome global style in `src/index.css`.
 - Added Tailwind configuration in `tailwind.config.js`.
 - Added PostCSS configuration in `postcss.config.js`.
-- Used a restrained clinical palette with white backgrounds, blue accents, gray surfaces, rounded cards, and soft shadows.
+- Used a restrained black-and-white palette with neutral surfaces, rounded cards, and soft shadows.
 - Added IBM Plex Sans for a more purposeful healthcare-friendly feel.
 
 ## Important Files
@@ -88,14 +176,27 @@ Added reusable layout and visual components in `src/components/layout/` and `src
 - [src/App.tsx](src/App.tsx)
 - [src/lib/workflow.ts](src/lib/workflow.ts)
 - [src/context/workflow-context.tsx](src/context/workflow-context.tsx)
+- [src/utils/routes.ts](src/utils/routes.ts)
+- [src/types/navigation.ts](src/types/navigation.ts)
 - [src/components/layout/AppShell.tsx](src/components/layout/AppShell.tsx)
+- [src/components/layout/Navbar.tsx](src/components/layout/Navbar.tsx)
+- [src/components/layout/PillNav.tsx](src/components/layout/PillNav.tsx)
+- [src/components/layout/WorkflowStepper.tsx](src/components/layout/WorkflowStepper.tsx)
+- [src/components/layout/Footer.tsx](src/components/layout/Footer.tsx)
+- [src/components/layout/PageContainer.tsx](src/components/layout/PageContainer.tsx)
+- [src/components/layout/SectionHeading.tsx](src/components/layout/SectionHeading.tsx)
+- [src/components/layout/FeatureCard.tsx](src/components/layout/FeatureCard.tsx)
 - [src/components/layout/PageHeader.tsx](src/components/layout/PageHeader.tsx)
 - [src/pages/LandingPage.tsx](src/pages/LandingPage.tsx)
+- [src/pages/PatientPage.tsx](src/pages/PatientPage.tsx)
 - [src/pages/PatientInfoPage.tsx](src/pages/PatientInfoPage.tsx)
 - [src/pages/ScanUploadPage.tsx](src/pages/ScanUploadPage.tsx)
 - [src/pages/ProcessingPage.tsx](src/pages/ProcessingPage.tsx)
 - [src/pages/ResultsPage.tsx](src/pages/ResultsPage.tsx)
+- [src/pages/ReportPage.tsx](src/pages/ReportPage.tsx)
 - [src/pages/ClinicalReportPage.tsx](src/pages/ClinicalReportPage.tsx)
+- [src/pages/AboutPage.tsx](src/pages/AboutPage.tsx)
+- [src/pages/ContactPage.tsx](src/pages/ContactPage.tsx)
 
 ## How to Run
 
@@ -116,15 +217,17 @@ npm run build
 - The app is frontend-only right now and uses mock data.
 - Authentication, database access, permissions, and hospital management are intentionally not implemented.
 - The current architecture is ready for a FastAPI backend to be added later without major restructuring.
-- The report download button is a placeholder and does not yet generate a PDF.
+- The report download button now exports a text report from the client; swap in real PDF generation if needed.
 - The upload preview currently uses local browser file objects only.
+- The new route constants in `src/utils/routes.ts` should be reused for any future navigation work.
+- `useTimeout` is the preferred place for timed navigation behavior.
 
 ## Suggested Next Steps
 
 1. Add a mock or real API client layer for FastAPI integration.
 2. Replace the simulated processing flow with API-backed request/response handling.
 3. Implement real PDF export for the clinical report.
-4. Add stronger form validation and a nicer patient summary review step if needed.
+4. Wire the placeholder About and Contact pages to real project or clinic data.
 5. Swap the temporary mock analysis with backend-driven results once the API exists.
 
 ## Handoff Summary
