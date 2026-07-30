@@ -154,7 +154,7 @@ export function PatientPage() {
                   />
                 </Field>
 
-                <div className="rounded-2xl bg-steel-50 px-4 py-3 text-sm text-steel-600">
+                <div className="rounded-2xl border border-steel-900 bg-white px-4 py-3 text-sm text-steel-900">
                   The mock model uses these fields to generate a personalized analysis summary later in the flow.
                 </div>
               </CardContent>
