@@ -55,9 +55,6 @@ export function LandingPage() {
                 Start Analysis
                 <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button size="lg" variant="outline" onClick={() => navigate(ROUTES.results)}>
-                View Demo Results
-              </Button>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-3">
@@ -79,9 +76,6 @@ export function LandingPage() {
           <Card className="relative overflow-hidden bg-steel-900 text-white shadow-soft">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_35%),linear-gradient(180deg,rgba(23,23,23,0.96),rgba(23,23,23,1))]" />
             <CardHeader className="relative">
-              <Badge variant="secondary" className="w-fit bg-white text-steel-900 ring-white">
-                Stroke workflow snapshot
-              </Badge>
               <CardTitle className="text-2xl text-white">Designed for high-pressure clinical moments</CardTitle>
               <CardDescription className="max-w-md text-steel-200">
                 A focused layout, immediate data capture, and AI summaries that are easy to scan under time pressure.
