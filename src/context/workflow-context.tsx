@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useReducer, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useReducer, useRef, type ReactNode } from 'react'
 import {
   buildMockAnalysis,
   createInitialWorkflowState,
@@ -8,10 +8,18 @@ import {
   type ScanState,
   type WorkflowState,
 } from '../lib/workflow'
+import {
+  createPatientRecord,
+  fetchResults,
+  initiateWorkflowProcess,
+  mapBackendResultsToAnalysis,
+  uploadScanFile,
+} from '../services/api'
 
 type WorkflowAction =
   | { type: 'update_patient'; field: keyof PatientFormState; value: string | boolean }
-  | { type: 'update_scan'; field: keyof ScanState; value: string | number }
+  | { type: 'update_scan'; field: keyof ScanState; value: string | number | File | null | undefined }
+  | { type: 'set_ids'; patientId?: string; uploadId?: string; processId?: string }
   | { type: 'set_analysis'; value: AnalysisResult | null }
   | { type: 'reset' }
 
@@ -20,6 +28,7 @@ type WorkflowContextValue = WorkflowState & {
   updateScanField: <K extends keyof ScanState>(field: K, value: ScanState[K]) => void
   setAnalysis: (analysis: AnalysisResult | null) => void
   finalizeAnalysis: () => AnalysisResult
+  runBackendAnalysis: () => Promise<AnalysisResult>
   resetWorkflow: () => void
 }
 
@@ -43,6 +52,13 @@ function workflowReducer(state: WorkflowState, action: WorkflowAction): Workflow
           [action.field]: action.value,
         },
       }
+    case 'set_ids':
+      return {
+        ...state,
+        patientId: action.patientId ?? state.patientId,
+        uploadId: action.uploadId ?? state.uploadId,
+        processId: action.processId ?? state.processId,
+      }
     case 'set_analysis':
       return {
         ...state,
@@ -57,6 +73,36 @@ function workflowReducer(state: WorkflowState, action: WorkflowAction): Workflow
 
 export function WorkflowProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(workflowReducer, undefined, createInitialWorkflowState)
+  const stateRef = useRef(state)
+
+  useEffect(() => {
+    stateRef.current = state
+  }, [state])
+
+  const runBackendAnalysis = useCallback(async () => {
+    const currentState = stateRef.current
+    try {
+      const patRes = await createPatientRecord(currentState.patient)
+      dispatch({ type: 'set_ids', patientId: patRes.patientId })
+
+      const upRes = await uploadScanFile(currentState.scan)
+      dispatch({ type: 'set_ids', uploadId: upRes.uploadId })
+
+      const procRes = await initiateWorkflowProcess(patRes.patientId, upRes.uploadId)
+      dispatch({ type: 'set_ids', processId: procRes.processId })
+
+      const results = await fetchResults(procRes.processId)
+      const analysis = mapBackendResultsToAnalysis(results)
+
+      dispatch({ type: 'set_analysis', value: analysis })
+      return analysis
+    } catch (err) {
+      console.warn('Backend unavailable, falling back to client-side analysis:', err)
+      const mockResult = buildMockAnalysis(currentState.patient, currentState.scan)
+      dispatch({ type: 'set_analysis', value: mockResult })
+      return mockResult
+    }
+  }, [])
 
   const value: WorkflowContextValue = {
     ...state,
@@ -68,6 +114,7 @@ export function WorkflowProvider({ children }: { children: ReactNode }) {
       dispatch({ type: 'set_analysis', value: analysis })
       return analysis
     },
+    runBackendAnalysis,
     resetWorkflow: () => dispatch({ type: 'reset' }),
   }
 

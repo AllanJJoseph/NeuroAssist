@@ -11,24 +11,29 @@ import { ROUTES } from '../utils/routes'
 export function ScanUploadPage() {
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const { scan, updateScanField, finalizeAnalysis } = useWorkflow()
+  const { scan, updateScanField } = useWorkflow()
   const [localPreview, setLocalPreview] = useState<string>(scan.previewUrl)
   const [uploadProgress, setUploadProgress] = useState(scan.uploadProgress)
   const [dragActive, setDragActive] = useState(false)
 
   useEffect(() => {
     if (!scan.fileName) return undefined
+    if (uploadProgress >= 100) return undefined
 
     const interval = window.setInterval(() => {
       setUploadProgress((current) => {
-        const next = Math.min(100, current + 14)
+        if (current >= 100) {
+          window.clearInterval(interval)
+          return 100
+        }
+        const next = Math.min(100, current + 1.5)
         updateScanField('uploadProgress', next)
         return next
       })
-    }, 180)
+    }, 30)
 
     return () => window.clearInterval(interval)
-  }, [scan.fileName, updateScanField])
+  }, [scan.fileName, updateScanField, uploadProgress])
 
   const handleFile = (file: File | null) => {
     if (!file) return
@@ -37,12 +42,12 @@ export function ScanUploadPage() {
     setLocalPreview(objectUrl)
     updateScanField('fileName', file.name)
     updateScanField('previewUrl', objectUrl)
-    setUploadProgress(10)
-    updateScanField('uploadProgress', 10)
+    updateScanField('file', file)
+    setUploadProgress(0)
+    updateScanField('uploadProgress', 0)
   }
 
   const handleAnalyze = () => {
-    finalizeAnalysis()
     navigate(ROUTES.processing)
   }
 

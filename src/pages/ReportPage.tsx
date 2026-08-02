@@ -8,10 +8,11 @@ import { PageHeader } from '../components/layout/PageHeader'
 import { Separator } from '../components/ui/separator'
 import { useWorkflow } from '../context/workflow-context'
 import { ROUTES } from '../utils/routes'
+import { getDownloadReportUrl } from '../services/api'
 
 export function ReportPage() {
   const navigate = useNavigate()
-  const { analysis, patient, scan } = useWorkflow()
+  const { analysis, patient, scan, patientId, uploadId, processId } = useWorkflow()
 
   useEffect(() => {
     if (!analysis) {
@@ -31,6 +32,12 @@ export function ReportPage() {
   ]
 
   const downloadReport = () => {
+    const targetId = processId || patientId || uploadId
+    if (targetId) {
+      window.open(getDownloadReportUrl(targetId), '_blank')
+      return
+    }
+
     const lines = [
       'NeuroAssist Clinical Report',
       `Generated: ${analysis.generatedAt}`,

@@ -25,6 +25,7 @@ export type ScanState = {
   fileName: string
   previewUrl: string
   uploadProgress: number
+  file?: File | null
 }
 
 export type RiskFactor = {
@@ -54,6 +55,9 @@ export type WorkflowState = {
   patient: PatientFormState
   scan: ScanState
   analysis: AnalysisResult | null
+  patientId?: string | null
+  uploadId?: string | null
+  processId?: string | null
 }
 
 export const symptomOptions = [

@@ -8,7 +8,7 @@ type ProgressProps = HTMLAttributes<HTMLDivElement> & {
 export function Progress({ className, value, ...props }: ProgressProps) {
   return (
     <div className={cn('h-2 w-full overflow-hidden rounded-full border border-steel-900 bg-white', className)} {...props}>
-      <div className="h-full rounded-full bg-steel-900 transition-all duration-300" style={{ width: `${Math.max(0, Math.min(100, value))}%` }} />
+      <div className="h-full rounded-full bg-green-500 transition-all duration-300 ease-in-out" style={{ width: `${Math.max(0, Math.min(100, value))}%` }} />
     </div>
   )
 }

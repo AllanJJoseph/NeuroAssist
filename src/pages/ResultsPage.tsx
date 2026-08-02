@@ -77,7 +77,7 @@ export function ResultsPage() {
         </div>
 
         <div className="space-y-6">
-          <BrainScanPreview highlightLabel={analysis.lesionLocation} />
+          <BrainScanPreview highlightLabel={analysis.lesionLocation} previewUrl={scan.previewUrl} />
 
           <Card>
             <CardHeader>

@@ -17,7 +17,7 @@ export function ContributionBars({ items }: ContributionBarsProps) {
             <span className="text-steel-500">{item.value}</span>
           </div>
           <div className="h-2.5 overflow-hidden rounded-full border border-steel-900 bg-white">
-            <div className="h-full rounded-full bg-steel-900" style={{ width: `${(item.value / maxValue) * 100}%` }} />
+            <div className="h-full rounded-full bg-green-500 transition-all duration-300 ease-in-out" style={{ width: `${(item.value / maxValue) * 100}%` }} />
           </div>
         </div>
       ))}
