@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, File, Form, UploadFile, status
 
-from ....core.config import Settings, get_settings
-from ....schemas.common import ScanModality
-from ....schemas.scan import ScanAnalysisRequest, ScanAnalysisResponse, ScanUploadResponse
-from ....services.scan_service import analyze_scan, save_scan_upload
+from app.core.config import Settings, get_settings
+from app.schemas.common import ScanModality
+from app.schemas.scan import ScanAnalysisRequest, ScanAnalysisResponse, ScanUploadResponse
+from app.services.scan_service import analyze_scan, save_scan_upload
 
 router = APIRouter(tags=['scan'])
 
