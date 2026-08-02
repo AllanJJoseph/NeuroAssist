@@ -9,6 +9,7 @@ import { ContributionBars } from '../components/visuals/ContributionBars'
 import { RiskMeter } from '../components/visuals/RiskMeter'
 import { Separator } from '../components/ui/separator'
 import { useWorkflow } from '../context/workflow-context'
+import { ROUTES } from '../utils/routes'
 
 export function ResultsPage() {
   const navigate = useNavigate()
@@ -16,12 +17,12 @@ export function ResultsPage() {
 
   useEffect(() => {
     if (!analysis) {
-      navigate('/patient', { replace: true })
+      navigate(ROUTES.patient, { replace: true })
     }
   }, [analysis, navigate])
 
   if (!analysis) {
-    return <Navigate to="/patient" replace />
+    return <Navigate to={ROUTES.patient} replace />
   }
 
   return (
@@ -32,11 +33,8 @@ export function ResultsPage() {
         description="A clinical-style view of the mock AI output, emphasizing probability, lesion context, and next considerations."
         action={
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button variant="outline" onClick={() => navigate('/scan')}>
-              Edit scan
-            </Button>
-            <Button onClick={() => navigate('/report')}>
-              Open clinical report
+            <Button onClick={() => navigate(ROUTES.report)}>
+              Generate Report
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
@@ -60,8 +58,8 @@ export function ResultsPage() {
                 <Metric label="Modality" value={scan.modality} icon={<FileText className="h-4 w-4" />} />
               </div>
 
-              <div className="rounded-3xl border border-medical-200 bg-medical-50 p-5">
-                <div className="text-sm font-semibold uppercase tracking-[0.18em] text-medical-700">Summary</div>
+              <div className="rounded-3xl border border-steel-900 bg-white p-5">
+                <div className="text-sm font-semibold uppercase tracking-[0.18em] text-steel-700">Summary</div>
                 <p className="mt-2 text-sm leading-7 text-steel-700">{analysis.reportSummary}</p>
               </div>
             </CardContent>
@@ -102,20 +100,20 @@ export function ResultsPage() {
             </CardHeader>
             <CardContent className="space-y-3">
               {analysis.clinicalConsiderations.map((item) => (
-                <div key={item} className="flex gap-3 rounded-2xl border border-steel-200 bg-white px-4 py-3">
-                  <div className="mt-1 h-2.5 w-2.5 rounded-full bg-medical-500" />
+                <div key={item} className="flex gap-3 rounded-2xl border border-steel-900 bg-white px-4 py-3">
+                  <div className="mt-1 h-2.5 w-2.5 rounded-full bg-steel-900" />
                   <div className="text-sm leading-6 text-steel-700">{item}</div>
                 </div>
               ))}
             </CardContent>
           </Card>
 
-          <Card className="bg-steel-950 text-white">
+          <Card className="bg-white text-steel-900">
             <CardContent className="space-y-3 p-6">
-              <div className="text-sm font-semibold uppercase tracking-[0.18em] text-steel-300">Workflow status</div>
+              <div className="text-sm font-semibold uppercase tracking-[0.18em] text-steel-500">Workflow status</div>
               <div className="text-lg font-semibold">Analysis complete for {patient.name}</div>
-              <Separator className="border-white/10" />
-              <div className="text-sm leading-6 text-steel-200">
+              <Separator />
+              <div className="text-sm leading-6 text-steel-600">
                 This dashboard is ready to hand off into the clinical report view or to restart the workflow for a different patient.
               </div>
             </CardContent>
@@ -128,8 +126,8 @@ export function ResultsPage() {
 
 function Metric({ label, value, icon }: { label: string; value: string; icon: ReactNode }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-steel-200 bg-steel-50 px-4 py-4">
-      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-medical-700 shadow-sm">{icon}</div>
+    <div className="flex items-center gap-3 rounded-2xl border border-steel-900 bg-white px-4 py-4">
+      <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-steel-900 bg-white text-steel-900 shadow-sm">{icon}</div>
       <div>
         <div className="text-xs font-semibold uppercase tracking-[0.18em] text-steel-500">{label}</div>
         <div className="text-base font-semibold text-steel-900">{value}</div>

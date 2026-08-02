@@ -1,23 +1,28 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { AppShell } from './components/layout/AppShell'
-import { ClinicalReportPage } from './pages/ClinicalReportPage'
+import { AboutPage } from './pages/AboutPage'
+import { ContactPage } from './pages/ContactPage'
 import { LandingPage } from './pages/LandingPage'
-import { PatientInfoPage } from './pages/PatientInfoPage'
+import { PatientPage } from './pages/PatientPage'
 import { ProcessingPage } from './pages/ProcessingPage'
 import { ResultsPage } from './pages/ResultsPage'
 import { ScanUploadPage } from './pages/ScanUploadPage'
+import { ReportPage } from './pages/ReportPage'
+import { ROUTES } from './utils/routes'
 
 function App() {
   return (
     <AppShell>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/patient" element={<PatientInfoPage />} />
-        <Route path="/scan" element={<ScanUploadPage />} />
-        <Route path="/processing" element={<ProcessingPage />} />
-        <Route path="/results" element={<ResultsPage />} />
-        <Route path="/report" element={<ClinicalReportPage />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path={ROUTES.home} element={<LandingPage />} />
+        <Route path={ROUTES.patient} element={<PatientPage />} />
+        <Route path={ROUTES.scan} element={<ScanUploadPage />} />
+        <Route path={ROUTES.processing} element={<ProcessingPage />} />
+        <Route path={ROUTES.results} element={<ResultsPage />} />
+        <Route path={ROUTES.report} element={<ReportPage />} />
+        <Route path={ROUTES.about} element={<AboutPage />} />
+        <Route path={ROUTES.contact} element={<ContactPage />} />
+        <Route path="*" element={<Navigate to={ROUTES.home} replace />} />
       </Routes>
     </AppShell>
   )

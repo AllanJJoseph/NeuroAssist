@@ -4,6 +4,7 @@ import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { useWorkflow } from '../context/workflow-context'
+import { ROUTES } from '../utils/routes'
 
 const highlights = [
   {
@@ -29,15 +30,15 @@ export function LandingPage() {
 
   const handleStart = () => {
     resetWorkflow()
-    navigate('/patient')
+    navigate(ROUTES.patient)
   }
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-12 px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
-      <section className="relative overflow-hidden rounded-[2rem] border border-steel-200 bg-white px-6 py-10 shadow-card sm:px-10 sm:py-12 lg:px-14 lg:py-16">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.08),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(14,165,233,0.07),transparent_28%)]" />
+      <section className="relative overflow-hidden rounded-[2rem] border border-steel-900 bg-white px-6 py-10 shadow-card sm:px-10 sm:py-12 lg:px-14 lg:py-16">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(0,0,0,0.06),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(0,0,0,0.04),transparent_28%)]" />
 
-        <div className="relative grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+        <div className="relative grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
           <div className="space-y-6">
             <Badge className="inline-flex">Clinical decision support for stroke triage</Badge>
             <div className="space-y-4">
@@ -54,9 +55,6 @@ export function LandingPage() {
                 Start Analysis
                 <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button size="lg" variant="outline" onClick={() => navigate('/results')}>
-                View Demo Results
-              </Button>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-3">
@@ -65,7 +63,7 @@ export function LandingPage() {
                 ['Output', 'Probability, type, risk level'],
                 ['Build', 'React, TypeScript, Tailwind'],
               ].map(([label, value]) => (
-                <Card key={label} className="bg-steel-50/80">
+                <Card key={label} className="bg-white">
                   <CardContent className="p-4">
                     <div className="text-xs font-semibold uppercase tracking-[0.18em] text-steel-500">{label}</div>
                     <div className="mt-2 text-sm font-semibold text-steel-900">{value}</div>
@@ -75,12 +73,9 @@ export function LandingPage() {
             </div>
           </div>
 
-          <Card className="relative overflow-hidden bg-steel-950 text-white shadow-soft">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.25),transparent_35%),linear-gradient(180deg,rgba(15,23,42,0.95),rgba(15,23,42,1))]" />
+          <Card className="relative overflow-hidden bg-steel-900 text-white shadow-soft">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_35%),linear-gradient(180deg,rgba(23,23,23,0.96),rgba(23,23,23,1))]" />
             <CardHeader className="relative">
-              <Badge variant="secondary" className="w-fit bg-white/10 text-white ring-white/15">
-                Stroke workflow snapshot
-              </Badge>
               <CardTitle className="text-2xl text-white">Designed for high-pressure clinical moments</CardTitle>
               <CardDescription className="max-w-md text-steel-200">
                 A focused layout, immediate data capture, and AI summaries that are easy to scan under time pressure.
@@ -93,7 +88,7 @@ export function LandingPage() {
                 'Results dashboard with lesion preview and next steps',
               ].map((item) => (
                 <div key={item} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-medical-500/20 text-medical-200">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white">
                     <Sparkles className="h-4 w-4" />
                   </div>
                   <div className="text-sm text-white/90">{item}</div>
@@ -108,7 +103,7 @@ export function LandingPage() {
         {highlights.map((item) => (
           <Card key={item.title}>
             <CardHeader>
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-medical-50 text-medical-700">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-steel-900 bg-white text-steel-900">
                 <item.icon className="h-6 w-6" />
               </div>
               <CardTitle>{item.title}</CardTitle>
