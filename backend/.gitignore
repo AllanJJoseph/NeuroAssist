@@ -11,3 +11,15 @@ env/
 .env
 uploads/*
 !uploads/.gitkeep
+# Image AI
+image_ai/datasets/
+backend/image_ai/datasets/
+
+image_ai/checkpoints/
+backend/image_ai/checkpoints/
+
+image_ai/outputs/
+backend/image_ai/outputs/
+
+*.pth
+*.pt
