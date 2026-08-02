@@ -1,6 +1,6 @@
 # NeuroAssist Project Context
 
-This file is the working handoff log for the NeuroAssist hackathon frontend. It is meant to help the next teammate or agent understand what has already been built, how the app is structured, and what should happen next.
+This file is the working handoff log for the NeuroAssist NeuroAssist project. It is meant to help the next teammate or agent understand what has already been built, how the app is structured, and what should happen next.
 
 ## Current Status
 
@@ -11,6 +11,9 @@ This file is the working handoff log for the NeuroAssist hackathon frontend. It 
 - The main end-to-end frontend flow is implemented and working.
 - `npm run build` and `npm run lint` both pass.
 - The dev server can be started with `npm run dev`.
+- The backend now includes a retrained stroke prediction pipeline under `backend/training/`.
+- The saved production model is expected at `backend/models/stroke_model.pkl`.
+- FastAPI prediction now consumes the trained pipeline directly instead of mock logic.
 
 ## What Has Been Built
 
@@ -97,6 +100,50 @@ Added reusable layout and visual components in `src/components/layout/` and `src
 - [src/pages/ResultsPage.tsx](src/pages/ResultsPage.tsx)
 - [src/pages/ClinicalReportPage.tsx](src/pages/ClinicalReportPage.tsx)
 
+## Backend Training Pipeline
+
+The production training workflow now lives under `backend/training/` and is designed around the seven frontend-available patient features only:
+
+- `gender`
+- `age`
+- `hypertension`
+- `heart_disease`
+- `avg_glucose_level`
+- `bmi`
+- `smoking_status`
+
+### Training Structure
+
+- `backend/training/datasets/healthcare-dataset-stroke-data.csv` holds the source dataset.
+- `backend/training/scripts/train.py` trains Logistic Regression, Random Forest, and XGBoost.
+- `backend/training/scripts/preprocess.py` builds the shared preprocessing pipeline.
+- `backend/training/scripts/evaluate.py` computes evaluation metrics and writes comparison artifacts.
+- `backend/training/scripts/eda.py` produces exploratory data analysis outputs.
+- `backend/training/scripts/predict.py` provides model loading and inference helpers.
+- `backend/training/utils/paths.py` centralizes training and output paths.
+- `backend/training/utils/data_loader.py` validates and loads the dataset.
+- `backend/training/utils/visualization.py` handles EDA and evaluation plots.
+
+### Training Outputs
+
+- Model artifacts are saved to `backend/models/stroke_model.pkl`.
+- Plots are written to `backend/training/outputs/plots/`.
+- Reports are written to `backend/training/outputs/reports/`.
+
+### Training Run Command
+
+From the project root:
+
+```bash
+python backend/training/scripts/train.py
+```
+
+### Prediction Integration
+
+- `backend/app/services/prediction_service.py` now loads the trained pipeline from `backend/models/stroke_model.pkl` once at import time.
+- The prediction request is mapped manually to a seven-column pandas DataFrame in the exact order expected by the retrained model.
+- The FastAPI response structure remains unchanged.
+
 ## How to Run
 
 ```bash
@@ -111,37 +158,14 @@ npm run lint
 npm run build
 ```
 
-## Notes For The Next Teammate
+## Backend Context
 
-- The app is frontend-only right now and uses mock data.
-- Authentication, database access, permissions, and hospital management are intentionally not implemented.
-- The current architecture is ready for a FastAPI backend to be added later without major restructuring.
-- The report download button is a placeholder and does not yet generate a PDF.
-- The upload preview currently uses local browser file objects only.
-
-## Suggested Next Steps
-
-1. Add a mock or real API client layer for FastAPI integration.
-2. Replace the simulated processing flow with API-backed request/response handling.
-3. Implement real PDF export for the clinical report.
-4. Add stronger form validation and a nicer patient summary review step if needed.
-5. Swap the temporary mock analysis with backend-driven results once the API exists.
-
-## Handoff Summary
-
-The app is in a usable demo state. A new teammate can open the repo, run the app, and continue by wiring backend services, improving validation, or polishing the report/export flow.
-
----
-
-# NeuroAssist Backend Context
-
-This section tracks the FastAPI backend work that was added after the frontend handoff notes above.
+This section tracks the FastAPI backend and training integration that now coexist in the same repository.
 
 ## Current Status
 
 - Backend scaffolded under `backend/` as a modular FastAPI project.
 - Pydantic request and response models are implemented for every endpoint.
-- Mock AI services are separated from the API layer so real ML models can replace them later without changing the contract.
 - Upload handling saves files into `backend/uploads/` with validation and size checks.
 - Automatic Swagger docs are available at `/docs` once the backend is running.
 - The backend package compiles successfully with `python -m compileall backend/app`.
@@ -149,10 +173,17 @@ This section tracks the FastAPI backend work that was added after the frontend h
 ## Implemented Endpoints
 
 - `GET /` returns a JSON health message and API version.
-- `POST /predict` accepts structured patient data and returns mock stroke risk results.
-- `POST /upload-scan` accepts multipart scan uploads, validates file type, saves the file, and returns the stored filename.
-- `POST /analyze-scan` returns mock imaging analysis including stroke type, confidence, lesion location, and a placeholder heatmap path.
-- `POST /generate-report` returns a structured clinical report with patient summary, AI findings, risk factors, suggested considerations, confidence, and disclaimer.
+- `POST /predict` accepts structured patient data and returns model-driven stroke risk results using `stroke_model.pkl`.
+- `POST /patient` validates patient information, creates an in-memory patient record, and returns a unique `patientId`.
+- `POST /upload` accepts CT/MRI scan uploads, validates file type, saves to `uploads/`, and returns `uploadId`.
+- `POST /process` receives `patientId` and `uploadId`, runs the trained ML prediction model and scan analysis, and generates complete results & report.
+- `GET /status/{id}` returns the processing status (`queued`, `processing`, `completed`, `failed`) and progress for a task ID.
+- `GET /results/{id}` returns complete stroke prediction, risk level, confidence, recommendations, and risk factors.
+- `GET /report/{id}` returns the structured clinical report object.
+- `GET /download/{id}` streams a downloadable `.txt` report file attachment.
+- `POST /upload-scan` accepts multipart scan uploads (legacy endpoint).
+- `POST /analyze-scan` returns mock imaging analysis (legacy endpoint).
+- `POST /generate-report` returns a structured clinical report (legacy endpoint).
 
 ## Backend File Layout
 
@@ -160,8 +191,10 @@ This section tracks the FastAPI backend work that was added after the frontend h
 - `backend/app/core/config.py` contains environment-driven settings and upload path configuration.
 - `backend/app/api/` contains the router and endpoint modules.
 - `backend/app/schemas/` contains the Pydantic models and enums.
-- `backend/app/services/` contains the mock AI logic for prediction, scan analysis, and report generation.
-- `backend/app/utils/` contains shared scoring, file validation, and upload helpers.
+- `backend/app/services/` contains the prediction, scan analysis, and report service logic.
+- `backend/app/utils/` contains shared helpers.
+- `backend/models/` stores the trained `stroke_model.pkl` artifact.
+- `backend/training/` contains the retraining workflow, dataset, plots, reports, and reusable helpers.
 - `backend/uploads/` is the persisted upload target.
 
 ## Backend Run Instructions
@@ -172,16 +205,21 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
+## Training Run Instructions
+
+```bash
+python backend/training/scripts/train.py
+```
+
 ## Notes For The Next Backend Teammate
 
-- The API contract is intentionally stable and mock-driven so the service layer can later call real ML models or FastAPI dependencies without route changes.
-- The upload endpoint currently supports common image formats and DICOM-like files; tighten or expand that list once the real imaging flow is defined.
-- The report endpoint expects nested patient, prediction, and scan-analysis payloads so it can stay stateless.
+- The prediction service now depends on `backend/models/stroke_model.pkl` being present.
+- The retrained model only expects the seven frontend-available patient features listed above.
+- The training pipeline saves comparison reports and plots under `backend/training/outputs/`.
 - If the frontend starts calling the backend, the CORS defaults already allow `localhost:5173`.
 
 ## Suggested Next Steps
 
-1. Replace the mock service functions with real model inference adapters.
-2. Add persistent storage or object storage for uploaded scan files if needed.
-3. Add automated tests for request validation and endpoint contracts.
-4. Add a small frontend API client that points to these endpoints.
+1. Add automated tests for the new model-backed prediction path.
+2. Add a small frontend API client that points to the backend endpoints.
+3. Populate the training dataset with the real CSV contents before retraining.
