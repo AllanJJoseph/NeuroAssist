@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Activity, BrainCircuit, ClipboardList, FileSpreadsheet, Loader2, Sparkles } from 'lucide-react'
+import { Activity, AlertTriangle, BrainCircuit, ClipboardList, FileSpreadsheet, Loader2, Sparkles } from 'lucide-react'
 import { PageHeader } from '../components/layout/PageHeader'
 import { Badge } from '../components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Progress } from '../components/ui/progress'
 import { useWorkflow } from '../context/workflow-context'
-import { useTimeout } from '../hooks/useTimeout'
 import { ROUTES } from '../utils/routes'
 
 const processingMessages = [
@@ -20,28 +19,67 @@ const processingMessages = [
 export function ProcessingPage() {
   const navigate = useNavigate()
   const { runBackendAnalysis, scan } = useWorkflow()
-  const [step, setStep] = useState(0)
+  const [progress, setProgress] = useState(0)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [backendDone, setBackendDone] = useState(false)
 
   useEffect(() => {
-    let isMounted = true
+    let active = true
 
-    runBackendAnalysis().then(() => {
-      if (isMounted) {
-        setStep(processingMessages.length - 1)
-      }
-    })
-
-    const interval = window.setInterval(() => {
-      setStep((current) => Math.min(processingMessages.length - 1, current + 1))
-    }, 900)
+    runBackendAnalysis()
+      .then(() => {
+        if (active) {
+          setBackendDone(true)
+        }
+      })
+      .catch((err: unknown) => {
+        if (active) {
+          setErrorMessage(err instanceof Error ? err.message : 'Backend processing failed')
+        }
+      })
 
     return () => {
-      isMounted = false
-      window.clearInterval(interval)
+      active = false
     }
   }, [runBackendAnalysis])
 
-  useTimeout(() => navigate(ROUTES.results), 4700)
+  useEffect(() => {
+    if (errorMessage) return undefined
+
+    const interval = window.setInterval(() => {
+      setProgress((current) => {
+        if (current >= 100) {
+          window.clearInterval(interval)
+          return 100
+        }
+
+        if (backendDone) {
+          const next = current + 5
+          if (next >= 100) {
+            window.clearInterval(interval)
+            return 100
+          }
+          return next
+        }
+
+        if (current < 90) {
+          return current + 1.35
+        }
+
+        return Math.min(98, current + 0.1)
+      })
+    }, 30)
+
+    return () => window.clearInterval(interval)
+  }, [backendDone, errorMessage])
+
+  useEffect(() => {
+    if (progress >= 100 && backendDone) {
+      navigate(ROUTES.results, { replace: true })
+    }
+  }, [progress, backendDone, navigate])
+
+  const step = Math.min(processingMessages.length - 1, Math.floor((progress / 100) * processingMessages.length))
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
@@ -50,6 +88,13 @@ export function ProcessingPage() {
         title="AI processing"
         description="This screen simulates the model pipeline with a controlled, professional loading sequence before the results dashboard appears."
       />
+
+      {errorMessage && (
+        <div className="mb-6 flex items-center gap-3 rounded-2xl border border-red-500 bg-red-50 p-4 text-red-700">
+          <AlertTriangle className="h-5 w-5 shrink-0" />
+          <div className="text-sm font-medium">{errorMessage}</div>
+        </div>
+      )}
 
       <div className="mt-8 grid gap-6 xl:grid-cols-[1fr_0.9fr]">
         <Card>
@@ -69,7 +114,7 @@ export function ProcessingPage() {
                 </div>
               </div>
               <div className="mt-4">
-                <Progress value={((step + 1) / processingMessages.length) * 100} />
+                <Progress value={progress} />
               </div>
             </div>
 

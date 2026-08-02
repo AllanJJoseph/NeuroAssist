@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useReducer, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useReducer, useRef, type ReactNode } from 'react'
 import {
   buildMockAnalysis,
   createInitialWorkflowState,
@@ -73,6 +73,36 @@ function workflowReducer(state: WorkflowState, action: WorkflowAction): Workflow
 
 export function WorkflowProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(workflowReducer, undefined, createInitialWorkflowState)
+  const stateRef = useRef(state)
+
+  useEffect(() => {
+    stateRef.current = state
+  }, [state])
+
+  const runBackendAnalysis = useCallback(async () => {
+    const currentState = stateRef.current
+    try {
+      const patRes = await createPatientRecord(currentState.patient)
+      dispatch({ type: 'set_ids', patientId: patRes.patientId })
+
+      const upRes = await uploadScanFile(currentState.scan)
+      dispatch({ type: 'set_ids', uploadId: upRes.uploadId })
+
+      const procRes = await initiateWorkflowProcess(patRes.patientId, upRes.uploadId)
+      dispatch({ type: 'set_ids', processId: procRes.processId })
+
+      const results = await fetchResults(procRes.processId)
+      const analysis = mapBackendResultsToAnalysis(results)
+
+      dispatch({ type: 'set_analysis', value: analysis })
+      return analysis
+    } catch (err) {
+      console.warn('Backend unavailable, falling back to client-side analysis:', err)
+      const mockResult = buildMockAnalysis(currentState.patient, currentState.scan)
+      dispatch({ type: 'set_analysis', value: mockResult })
+      return mockResult
+    }
+  }, [])
 
   const value: WorkflowContextValue = {
     ...state,
@@ -84,29 +114,7 @@ export function WorkflowProvider({ children }: { children: ReactNode }) {
       dispatch({ type: 'set_analysis', value: analysis })
       return analysis
     },
-    runBackendAnalysis: async () => {
-      try {
-        const patRes = await createPatientRecord(state.patient)
-        dispatch({ type: 'set_ids', patientId: patRes.patientId })
-
-        const upRes = await uploadScanFile(state.scan)
-        dispatch({ type: 'set_ids', uploadId: upRes.uploadId })
-
-        const procRes = await initiateWorkflowProcess(patRes.patientId, upRes.uploadId)
-        dispatch({ type: 'set_ids', processId: procRes.processId })
-
-        const results = await fetchResults(procRes.processId)
-        const analysis = mapBackendResultsToAnalysis(results)
-
-        dispatch({ type: 'set_analysis', value: analysis })
-        return analysis
-      } catch (err) {
-        console.warn('Backend unavailable, falling back to client-side analysis:', err)
-        const mockResult = buildMockAnalysis(state.patient, state.scan)
-        dispatch({ type: 'set_analysis', value: mockResult })
-        return mockResult
-      }
-    },
+    runBackendAnalysis,
     resetWorkflow: () => dispatch({ type: 'reset' }),
   }
 

@@ -18,17 +18,22 @@ export function ScanUploadPage() {
 
   useEffect(() => {
     if (!scan.fileName) return undefined
+    if (uploadProgress >= 100) return undefined
 
     const interval = window.setInterval(() => {
       setUploadProgress((current) => {
-        const next = Math.min(100, current + 14)
+        if (current >= 100) {
+          window.clearInterval(interval)
+          return 100
+        }
+        const next = Math.min(100, current + 1.5)
         updateScanField('uploadProgress', next)
         return next
       })
-    }, 180)
+    }, 30)
 
     return () => window.clearInterval(interval)
-  }, [scan.fileName, updateScanField])
+  }, [scan.fileName, updateScanField, uploadProgress])
 
   const handleFile = (file: File | null) => {
     if (!file) return
@@ -38,8 +43,8 @@ export function ScanUploadPage() {
     updateScanField('fileName', file.name)
     updateScanField('previewUrl', objectUrl)
     updateScanField('file', file)
-    setUploadProgress(10)
-    updateScanField('uploadProgress', 10)
+    setUploadProgress(0)
+    updateScanField('uploadProgress', 0)
   }
 
   const handleAnalyze = () => {
