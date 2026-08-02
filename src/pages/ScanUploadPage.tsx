@@ -11,7 +11,7 @@ import { ROUTES } from '../utils/routes'
 export function ScanUploadPage() {
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const { scan, updateScanField, finalizeAnalysis } = useWorkflow()
+  const { scan, updateScanField } = useWorkflow()
   const [localPreview, setLocalPreview] = useState<string>(scan.previewUrl)
   const [uploadProgress, setUploadProgress] = useState(scan.uploadProgress)
   const [dragActive, setDragActive] = useState(false)
@@ -37,12 +37,12 @@ export function ScanUploadPage() {
     setLocalPreview(objectUrl)
     updateScanField('fileName', file.name)
     updateScanField('previewUrl', objectUrl)
+    updateScanField('file', file)
     setUploadProgress(10)
     updateScanField('uploadProgress', 10)
   }
 
   const handleAnalyze = () => {
-    finalizeAnalysis()
     navigate(ROUTES.processing)
   }
 

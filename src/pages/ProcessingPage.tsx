@@ -19,22 +19,27 @@ const processingMessages = [
 
 export function ProcessingPage() {
   const navigate = useNavigate()
-  const { analysis, finalizeAnalysis, scan } = useWorkflow()
+  const { runBackendAnalysis, scan } = useWorkflow()
   const [step, setStep] = useState(0)
 
   useEffect(() => {
-    if (!analysis) {
-      finalizeAnalysis()
-    }
+    let isMounted = true
+
+    runBackendAnalysis().then(() => {
+      if (isMounted) {
+        setStep(processingMessages.length - 1)
+      }
+    })
 
     const interval = window.setInterval(() => {
       setStep((current) => Math.min(processingMessages.length - 1, current + 1))
     }, 900)
 
     return () => {
+      isMounted = false
       window.clearInterval(interval)
     }
-  }, [analysis, finalizeAnalysis, navigate])
+  }, [runBackendAnalysis])
 
   useTimeout(() => navigate(ROUTES.results), 4700)
 
