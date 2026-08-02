@@ -1,0 +1,251 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1180" viewBox="0 0 1800 1180" role="img" aria-labelledby="title desc">
+  <title id="title">NeuroAssist System Architecture</title>
+  <desc id="desc">A polished architecture diagram showing the React frontend, FastAPI backend, training pipeline, model storage, and data flow between them.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#07111f"/>
+      <stop offset="50%" stop-color="#0d1b2f"/>
+      <stop offset="100%" stop-color="#13253d"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f5f7fb"/>
+    </linearGradient>
+    <linearGradient id="accentBlue" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4ea5ff"/>
+      <stop offset="100%" stop-color="#7dd3fc"/>
+    </linearGradient>
+    <linearGradient id="accentGreen" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#a7f3d0"/>
+    </linearGradient>
+    <linearGradient id="accentAmber" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fcd34d"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#000000" flood-opacity="0.24"/>
+    </filter>
+    <filter id="shadowSoft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity="0.18"/>
+    </filter>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4ea5ff"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#34d399"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b"/>
+    </marker>
+    <style>
+      .title { font: 700 48px 'Segoe UI', Arial, sans-serif; fill: #f8fbff; letter-spacing: 0.3px; }
+      .subtitle { font: 400 21px 'Segoe UI', Arial, sans-serif; fill: #c9d7ef; }
+      .section { font: 700 24px 'Segoe UI', Arial, sans-serif; fill: #0f2744; }
+      .nodeTitle { font: 700 24px 'Segoe UI', Arial, sans-serif; fill: #10253f; }
+      .nodeText { font: 400 18px 'Segoe UI', Arial, sans-serif; fill: #30455f; }
+      .smallText { font: 500 16px 'Segoe UI', Arial, sans-serif; fill: #42556e; }
+      .chipText { font: 600 16px 'Segoe UI', Arial, sans-serif; fill: #10324f; }
+      .tiny { font: 500 14px 'Segoe UI', Arial, sans-serif; fill: #55708f; }
+      .label { font: 600 16px 'Segoe UI', Arial, sans-serif; fill: #e8f1ff; letter-spacing: 0.2px; }
+      .linkLabel { font: 600 15px 'Segoe UI', Arial, sans-serif; fill: #dbeafe; }
+      .panel { fill: url(#card); stroke: #d8e0ea; stroke-width: 2; filter: url(#shadow); }
+      .node { fill: #ffffff; stroke: #cad6e4; stroke-width: 2; filter: url(#shadowSoft); }
+      .nodeAccentBlue { fill: #eef6ff; stroke: #8dc5ff; stroke-width: 2.2; }
+      .nodeAccentGreen { fill: #ecfdf5; stroke: #6ee7b7; stroke-width: 2.2; }
+      .nodeAccentAmber { fill: #fffbeb; stroke: #fcd34d; stroke-width: 2.2; }
+      .pill { rx: 18; ry: 18; }
+      .badge { rx: 16; ry: 16; }
+      .lineBlue { stroke: #4ea5ff; stroke-width: 5; fill: none; marker-end: url(#arrowBlue); }
+      .lineGreen { stroke: #34d399; stroke-width: 5; fill: none; marker-end: url(#arrowGreen); }
+      .lineAmber { stroke: #f59e0b; stroke-width: 5; fill: none; marker-end: url(#arrowAmber); }
+      .lineFaint { stroke: #a7c3e5; stroke-width: 3; stroke-dasharray: 8 10; fill: none; }
+      .grid { opacity: 0.12; }
+    </style>
+  </defs>
+
+  <rect width="1800" height="1180" fill="url(#bg)"/>
+
+  <g class="grid">
+    <path d="M80 120 H1720" stroke="#7fa8d6" stroke-width="1"/>
+    <path d="M80 320 H1720" stroke="#7fa8d6" stroke-width="1"/>
+    <path d="M80 520 H1720" stroke="#7fa8d6" stroke-width="1"/>
+    <path d="M80 720 H1720" stroke="#7fa8d6" stroke-width="1"/>
+    <path d="M80 920 H1720" stroke="#7fa8d6" stroke-width="1"/>
+    <path d="M320 70 V1110" stroke="#7fa8d6" stroke-width="1"/>
+    <path d="M660 70 V1110" stroke="#7fa8d6" stroke-width="1"/>
+    <path d="M1000 70 V1110" stroke="#7fa8d6" stroke-width="1"/>
+    <path d="M1340 70 V1110" stroke="#7fa8d6" stroke-width="1"/>
+  </g>
+
+  <g transform="translate(80 60)">
+    <text class="title" x="0" y="0">NeuroAssist System Architecture</text>
+    <text class="subtitle" x="0" y="42">Frontend workflow, FastAPI backend, trained stroke model, and retraining pipeline</text>
+  </g>
+
+  <!-- Main platform panel -->
+  <rect x="70" y="120" width="1660" height="980" rx="34" class="panel"/>
+
+  <!-- Section headings -->
+  <g>
+    <text class="section" x="120" y="190">Patient Experience</text>
+    <text class="section" x="710" y="190">API &amp; Inference Layer</text>
+    <text class="section" x="1170" y="190">Training &amp; Model Lifecycle</text>
+  </g>
+
+  <!-- Left column: frontend -->
+  <g transform="translate(120 230)">
+    <rect width="470" height="190" rx="28" class="node nodeAccentBlue"/>
+    <text class="nodeTitle" x="34" y="46">React + Vite Frontend</text>
+    <text class="nodeText" x="34" y="82">Patient workflow, upload flow,</text>
+    <text class="nodeText" x="34" y="108">results, and clinical report UI</text>
+    <g transform="translate(34 124)">
+      <rect width="112" height="34" rx="17" fill="#dbeafe"/>
+      <text class="chipText" x="18" y="23">src/</text>
+    </g>
+    <g transform="translate(154 124)">
+      <rect width="126" height="34" rx="17" fill="#dbeafe"/>
+      <text class="chipText" x="18" y="23">BrowserRouter</text>
+    </g>
+    <g transform="translate(288 124)">
+      <rect width="150" height="34" rx="17" fill="#dbeafe"/>
+      <text class="chipText" x="18" y="23">Workflow Context</text>
+    </g>
+  </g>
+
+  <g transform="translate(120 460)">
+    <rect width="470" height="240" rx="28" class="node"/>
+    <text class="nodeTitle" x="34" y="46">User Inputs</text>
+    <text class="nodeText" x="34" y="82">• Gender</text>
+    <text class="nodeText" x="34" y="112">• Age</text>
+    <text class="nodeText" x="34" y="142">• Hypertension</text>
+    <text class="nodeText" x="34" y="172">• Heart disease</text>
+    <text class="nodeText" x="255" y="82">• Glucose level</text>
+    <text class="nodeText" x="255" y="112">• BMI</text>
+    <text class="nodeText" x="255" y="142">• Smoking history</text>
+    <text class="nodeText" x="255" y="172">• Optional symptoms</text>
+    <rect x="34" y="198" width="402" height="18" rx="9" fill="#e9eff6"/>
+    <rect x="34" y="198" width="306" height="18" rx="9" fill="#4ea5ff"/>
+  </g>
+
+  <g transform="translate(120 760)">
+    <rect width="470" height="240" rx="28" class="node nodeAccentGreen"/>
+    <text class="nodeTitle" x="34" y="46">Frontend Pages</text>
+    <text class="nodeText" x="34" y="86">Landing, patient info, scan upload,</text>
+    <text class="nodeText" x="34" y="116">processing, results, clinical report</text>
+    <text class="nodeText" x="34" y="164">The UI now calls the model-backed</text>
+    <text class="nodeText" x="34" y="194">prediction endpoint with raw patient data</text>
+  </g>
+
+  <!-- Center column: API/backend -->
+  <g transform="translate(675 230)">
+    <rect width="490" height="190" rx="28" class="node nodeAccentAmber"/>
+    <text class="nodeTitle" x="34" y="46">FastAPI Backend</text>
+    <text class="nodeText" x="34" y="82">app.main, API routers, request schemas,</text>
+    <text class="nodeText" x="34" y="108">validation, and response shaping</text>
+    <g transform="translate(34 124)">
+      <rect width="122" height="34" rx="17" fill="#fef3c7"/>
+      <text class="chipText" x="18" y="23">/predict</text>
+    </g>
+    <g transform="translate(164 124)">
+      <rect width="140" height="34" rx="17" fill="#fef3c7"/>
+      <text class="chipText" x="18" y="23">prediction_service</text>
+    </g>
+    <g transform="translate(312 124)">
+      <rect width="140" height="34" rx="17" fill="#fef3c7"/>
+      <text class="chipText" x="18" y="23">Pydantic Models</text>
+    </g>
+  </g>
+
+  <g transform="translate(675 460)">
+    <rect width="490" height="240" rx="28" class="node"/>
+    <text class="nodeTitle" x="34" y="46">Prediction Service</text>
+    <text class="nodeText" x="34" y="82">Loads the trained sklearn Pipeline once</text>
+    <text class="nodeText" x="34" y="112">at import time and predicts directly</text>
+    <text class="nodeText" x="34" y="142">from the constructed pandas DataFrame</text>
+    <text class="nodeText" x="34" y="172">Response stays stable for the frontend</text>
+    <rect x="34" y="198" width="420" height="18" rx="9" fill="#e9eff6"/>
+    <rect x="34" y="198" width="310" height="18" rx="9" fill="#34d399"/>
+  </g>
+
+  <g transform="translate(675 760)">
+    <rect width="490" height="240" rx="28" class="node nodeAccentBlue"/>
+    <text class="nodeTitle" x="34" y="46">Model Output Contract</text>
+    <text class="nodeText" x="34" y="82">Prediction response includes:</text>
+    <text class="nodeText" x="34" y="116">• strokeProbability</text>
+    <text class="nodeText" x="34" y="146">• confidenceScore</text>
+    <text class="nodeText" x="34" y="176">• riskLevel, stroke type, factors</text>
+    <text class="nodeText" x="34" y="206">• recommendations and summary text</text>
+  </g>
+
+  <!-- Right column: training -->
+  <g transform="translate(1180 230)">
+    <rect width="500" height="190" rx="28" class="node nodeAccentGreen"/>
+    <text class="nodeTitle" x="34" y="46">Training Pipeline</text>
+    <text class="nodeText" x="34" y="82">backend/training/scripts/train.py</text>
+    <text class="nodeText" x="34" y="108">Logistic Regression, Random Forest, XGBoost</text>
+    <text class="nodeText" x="34" y="134">SMOTE, evaluation, comparison, selection</text>
+    <text class="tiny" x="34" y="162">Inputs limited to seven frontend-available features</text>
+  </g>
+
+  <g transform="translate(1180 460)">
+    <rect width="500" height="240" rx="28" class="node"/>
+    <text class="nodeTitle" x="34" y="46">Model Artifacts &amp; Outputs</text>
+    <text class="nodeText" x="34" y="82">• backend/models/stroke_model.pkl</text>
+    <text class="nodeText" x="34" y="112">• backend/training/outputs/plots</text>
+    <text class="nodeText" x="34" y="142">• backend/training/outputs/reports</text>
+    <text class="nodeText" x="34" y="172">• ROC curve, confusion matrix, feature importance</text>
+    <text class="nodeText" x="34" y="202">• Comparison table and final summary</text>
+  </g>
+
+  <g transform="translate(1180 760)">
+    <rect width="500" height="240" rx="28" class="node nodeAccentAmber"/>
+    <text class="nodeTitle" x="34" y="46">Data Source</text>
+    <text class="nodeText" x="34" y="82">healthcare-dataset-stroke-data.csv</text>
+    <text class="nodeText" x="34" y="112">Loaded with pathlib.Path and validated</text>
+    <text class="nodeText" x="34" y="142">id column removed before preprocessing</text>
+    <text class="nodeText" x="34" y="172">Missing values imputed, categoricals encoded</text>
+    <text class="nodeText" x="34" y="202">Only selected feature columns are used</text>
+  </g>
+
+  <!-- Arrows -->
+  <path class="lineBlue" d="M 590 325 C 635 325, 640 325, 675 325"/>
+  <text class="linkLabel" x="600" y="305">patient data</text>
+
+  <path class="lineGreen" d="M 1010 325 C 1050 325, 1075 325, 1180 325"/>
+  <text class="linkLabel" x="1030" y="305">training config</text>
+
+  <path class="lineAmber" d="M 1430 420 C 1430 445, 1430 445, 1430 460"/>
+  <text class="linkLabel" x="1450" y="444">artifact save</text>
+
+  <path class="lineBlue" d="M 430 700 C 430 735, 430 735, 430 760"/>
+  <path class="lineGreen" d="M 920 700 C 920 735, 920 735, 920 760"/>
+  <path class="lineAmber" d="M 1430 700 C 1430 735, 1430 735, 1430 760"/>
+
+  <!-- Cross-links -->
+  <path class="lineFaint" d="M 640 530 C 770 530, 845 530, 1000 530"/>
+  <path class="lineFaint" d="M 1110 530 C 1160 530, 1180 530, 1180 530"/>
+  <path class="lineFaint" d="M 1675 530 C 1700 530, 1700 530, 1700 530"/>
+
+  <!-- Footer chips -->
+  <g transform="translate(120 1060)">
+    <rect width="264" height="42" rx="21" fill="#11273e" stroke="#2e4d6f" stroke-width="1.5"/>
+    <text class="label" x="20" y="27">Saved model: stroke_model.pkl</text>
+  </g>
+  <g transform="translate(402 1060)">
+    <rect width="304" height="42" rx="21" fill="#11273e" stroke="#2e4d6f" stroke-width="1.5"/>
+    <text class="label" x="20" y="27">Best model selected by ROC-AUC</text>
+  </g>
+  <g transform="translate(724 1060)">
+    <rect width="342" height="42" rx="21" fill="#11273e" stroke="#2e4d6f" stroke-width="1.5"/>
+    <text class="label" x="20" y="27">API accepts raw patient DataFrame</text>
+  </g>
+  <g transform="translate(1084 1060)">
+    <rect width="276" height="42" rx="21" fill="#11273e" stroke="#2e4d6f" stroke-width="1.5"/>
+    <text class="label" x="20" y="27">SMOTE on training split only</text>
+  </g>
+  <g transform="translate(1378 1060)">
+    <rect width="262" height="42" rx="21" fill="#11273e" stroke="#2e4d6f" stroke-width="1.5"/>
+    <text class="label" x="20" y="27">Reports and plots saved</text>
+  </g>
+</svg>
