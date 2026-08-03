@@ -14,6 +14,17 @@ This file is the working handoff log for the NeuroAssist NeuroAssist project. It
 - The backend now includes a retrained stroke prediction pipeline under `backend/training/`.
 - The saved production model is expected at `backend/models/stroke_model.pkl`.
 - FastAPI prediction now consumes the trained pipeline directly instead of mock logic.
+- Login page is the default entry point (`/`). Landing page is at `/home`.
+- Create Account page is available at `/register`.
+- Login and Create Account are standalone pages rendered outside AppShell (no Navbar, no Stepper).
+- Authentication state is managed via `AuthContext` backed by `sessionStorage`.
+- All app routes (`/home`, `/patient`, `/scan`, `/processing`, `/results`, `/report`, `/about`, `/contact`) are protected by `ProtectedRoute` — unauthenticated access redirects to `/`.
+- Navbar includes a Logout button that clears session and redirects to the Login page.
+- Visiting `/` or `/register` while already authenticated redirects to `/home`.
+- Login page uses a split-screen two-panel layout: left panel shows a full-height hero with an auto-playing fade slideshow (5 images, 2.5s interval, infinite loop) and hero text; right panel contains the login card (unchanged). Left panel is hidden on mobile.
+- Left panel hero text: "NeuroAssist" (large bold primary heading) above a slightly smaller "Clinical Decision Support Platform" and subtitle. All text has a transparent background with subtle text-shadow for readability.
+- Slideshow image captions are plain white text with no pill/box background.
+- Slideshow images are served from `public/images/` (slide1.jpg – slide5.jpg).
 
 ## What Has Been Built
 
@@ -27,6 +38,7 @@ This file is the working handoff log for the NeuroAssist NeuroAssist project. It
 
 Implemented the full demo flow:
 
+- Login page (No backend auth)
 - Landing page
 - Patient information form
 - Brain scan upload page
@@ -93,6 +105,7 @@ Added reusable layout and visual components in `src/components/layout/` and `src
 - [src/context/workflow-context.tsx](src/context/workflow-context.tsx)
 - [src/components/layout/AppShell.tsx](src/components/layout/AppShell.tsx)
 - [src/components/layout/PageHeader.tsx](src/components/layout/PageHeader.tsx)
+- [src/pages/LoginPage.tsx](src/pages/LoginPage.tsx)
 - [src/pages/LandingPage.tsx](src/pages/LandingPage.tsx)
 - [src/pages/PatientInfoPage.tsx](src/pages/PatientInfoPage.tsx)
 - [src/pages/ScanUploadPage.tsx](src/pages/ScanUploadPage.tsx)
