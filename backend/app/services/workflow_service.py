@@ -18,6 +18,7 @@ from app.schemas.workflow import (
     UploadResponse,
 )
 from app.services.prediction_service import generate_prediction
+from app.services.image_prediction_service import predict_saved_image
 from app.services.report_service import generate_clinical_report
 from app.services.scan_service import analyze_scan, save_scan_upload
 
@@ -99,6 +100,7 @@ def process_workflow(payload: ProcessRequest) -> ProcessResponse:
         filename=upload_info['filename'],
     )
     scan_analysis: ScanAnalysisResponse = analyze_scan(scan_analysis_req)
+    image_prediction = predict_saved_image(upload_info['stored_path'])
 
     report_req = ClinicalReportRequest(
         patient=patient_risk_req,
@@ -121,6 +123,7 @@ def process_workflow(payload: ProcessRequest) -> ProcessResponse:
         'prediction': prediction,
         'scan_analysis': scan_analysis,
         'clinical_report': clinical_report,
+        'image_prediction': image_prediction,
     }
 
     PROCESS_STORE[process_id] = record
@@ -161,6 +164,7 @@ def get_process_results(item_id: str) -> ResultsResponse:
     record = _find_process_record(item_id)
     prediction: PredictionResponse = record['prediction']
     scan_analysis: ScanAnalysisResponse = record['scan_analysis']
+    image_prediction = record.get('image_prediction')
 
     risk_factors_list = [rf.model_dump(by_alias=True) for rf in prediction.contributing_risk_factors]
     signal_breakdown = [
@@ -192,6 +196,7 @@ def get_process_results(item_id: str) -> ResultsResponse:
             'predictedStrokeType': prediction.predicted_stroke_type.value,
             'patientSummary': prediction.patient_summary,
         },
+        imagePrediction=image_prediction,
         generatedAt=prediction.generated_at,
     )
 

@@ -120,6 +120,11 @@ class ResultsResponse(BaseModel):
                 'lesionLocation': 'Left MCA territory hypodensity',
                 'signalBreakdown': [{'label': 'Age', 'value': 12}],
                 'prediction': {'strokeProbability': 86.0},
+                'imagePrediction': {
+                    'prediction': 'Bleeding',
+                    'confidence': 0.99,
+                    'heatmapPath': '/tmp/neuroassist_heatmap_example.png',
+                },
                 'generatedAt': '2026-08-02T14:00:00Z',
             }
         },
@@ -147,4 +152,9 @@ class ResultsResponse(BaseModel):
 
     # Preserve backward compatibility nested prediction object
     prediction: dict[str, Any] = Field(description='Nested prediction object for legacy callers')
+    image_prediction: dict[str, Any] | None = Field(
+        default=None,
+        alias='imagePrediction',
+        description='Optional image prediction result from the Image AI pipeline',
+    )
     generated_at: datetime = Field(alias='generatedAt', description='Timestamp of report/results generation')

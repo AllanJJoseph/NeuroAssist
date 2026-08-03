@@ -2,6 +2,8 @@ from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 
 from app.api.router import api_router
 from app.core.config import get_settings
@@ -25,6 +27,11 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*'],
 )
+
+HEATMAPS_DIR = Path(__file__).resolve().parents[1] / 'uploads' / 'heatmaps'
+HEATMAPS_DIR.mkdir(parents=True, exist_ok=True)
+
+app.mount('/static/heatmaps', StaticFiles(directory=str(HEATMAPS_DIR)), name='heatmaps')
 
 app.include_router(api_router)
 
