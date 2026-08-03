@@ -34,6 +34,12 @@ export type RiskFactor = {
   score: number
 }
 
+export type ImagePrediction = {
+  prediction: string
+  confidence: number
+  heatmapPath: string
+}
+
 export type AnalysisResult = {
   strokeProbability: number
   confidence: number
@@ -49,6 +55,7 @@ export type AnalysisResult = {
     value: number
   }>
   generatedAt: string
+  imagePrediction?: ImagePrediction | null
 }
 
 export type WorkflowState = {

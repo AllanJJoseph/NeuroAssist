@@ -86,7 +86,7 @@ export function ProcessingPage() {
       <PageHeader
         eyebrow="Step 3 of 6"
         title="AI processing"
-        description="This screen simulates the model pipeline with a controlled, professional loading sequence before the results dashboard appears."
+        description="Running the full AI pipeline: patient record creation, scan upload, Clinical AI inference, Image AI classification, and Grad-CAM generation."
       />
 
       {errorMessage && (
@@ -100,7 +100,7 @@ export function ProcessingPage() {
         <Card>
           <CardHeader>
             <CardTitle>Processing workflow</CardTitle>
-            <CardDescription>Each stage mirrors a backend call that will later be connected to FastAPI services.</CardDescription>
+            <CardDescription>Each stage corresponds to a live backend call to the FastAPI service.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="rounded-3xl border border-steel-900 bg-steel-50 px-5 py-5">
@@ -157,7 +157,7 @@ export function ProcessingPage() {
             <div className="rounded-3xl border border-steel-900 bg-white p-5">
               <div className="text-sm font-semibold uppercase tracking-[0.18em] text-steel-500">Transition</div>
               <div className="mt-2 text-sm leading-6 text-steel-600">
-                Preparing mock inference outputs, clinical risk drivers, and the report payload for the next screen.
+                Running Clinical AI inference and Image AI classification. The Grad-CAM heatmap is generated after scan processing completes.
               </div>
             </div>
 

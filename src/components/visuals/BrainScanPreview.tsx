@@ -5,6 +5,7 @@ type BrainScanPreviewProps = {
   subtitle?: string
   highlightLabel?: string
   previewUrl?: string
+  heatmapUrl?: string
 }
 
 function getLesionCoordinates(locationText: string | undefined): { x: number; y: number } {
@@ -39,6 +40,7 @@ export function BrainScanPreview({
   subtitle = 'AI lesion localization overlay',
   highlightLabel = 'Suspected lesion',
   previewUrl,
+  heatmapUrl,
 }: BrainScanPreviewProps) {
   const { x, y } = getLesionCoordinates(highlightLabel)
 
@@ -56,7 +58,9 @@ export function BrainScanPreview({
       </div>
 
       <div className="relative aspect-[4/3] bg-steel-900 p-6 overflow-hidden flex items-center justify-center">
-        {previewUrl ? (
+        {heatmapUrl ? (
+          <img src={heatmapUrl} alt="Grad-CAM Heatmap" className="h-full w-full object-contain rounded-2xl" />
+        ) : previewUrl ? (
           <img src={previewUrl} alt="Uploaded brain scan" className="h-full w-full object-cover rounded-2xl opacity-90" />
         ) : (
           <svg viewBox="0 0 420 300" className="h-full w-full">
@@ -96,24 +100,28 @@ export function BrainScanPreview({
           </svg>
         )}
 
-        <div
-          className="absolute pointer-events-none z-20 flex items-center justify-center -translate-x-1/2 -translate-y-1/2"
-          style={{ left: `${leftPercent}%`, top: `${topPercent}%` }}
-        >
-          <span className="absolute h-16 w-16 rounded-full bg-red-500/40 animate-ping" />
-          <span className="absolute h-12 w-12 rounded-full border-2 border-red-500 bg-red-500/20 shadow-lg shadow-red-500/50" />
-          <span className="relative h-4 w-4 rounded-full bg-red-600 border-2 border-white shadow-md" />
-        </div>
+        {!heatmapUrl && (
+          <div
+            className="absolute pointer-events-none z-20 flex items-center justify-center -translate-x-1/2 -translate-y-1/2"
+            style={{ left: `${leftPercent}%`, top: `${topPercent}%` }}
+          >
+            <span className="absolute h-16 w-16 rounded-full bg-red-500/40 animate-ping" />
+            <span className="absolute h-12 w-12 rounded-full border-2 border-red-500 bg-red-500/20 shadow-lg shadow-red-500/50" />
+            <span className="relative h-4 w-4 rounded-full bg-red-600 border-2 border-white shadow-md" />
+          </div>
+        )}
 
-        <div className="absolute left-6 top-6 z-20 rounded-2xl border border-steel-900 bg-white/95 backdrop-blur-md px-4 py-3 shadow-soft">
-          <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse" />
-            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-steel-500">Lesion marker</div>
+        {!heatmapUrl && (
+          <div className="absolute left-6 top-6 z-20 rounded-2xl border border-steel-900 bg-white/95 backdrop-blur-md px-4 py-3 shadow-soft">
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-red-500 animate-pulse" />
+              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-steel-500">Lesion marker</div>
+            </div>
+            <div className="mt-1 text-sm font-medium text-steel-900">
+              {highlightLabel || 'Highlighted region with elevated signal'}
+            </div>
           </div>
-          <div className="mt-1 text-sm font-medium text-steel-900">
-            {highlightLabel || 'Highlighted region with elevated signal'}
-          </div>
-        </div>
+        )}
       </div>
     </div>
   )

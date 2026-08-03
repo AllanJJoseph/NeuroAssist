@@ -36,7 +36,7 @@ export function PillNav({ items, className = '', initialLoadAnimation = true }: 
     const itemRect = activeItem.getBoundingClientRect()
 
     gsap.to(pill, {
-      x: itemRect.left - navRect.left,
+      x: itemRect.left - navRect.left - 4,
       width: itemRect.width,
       duration: 0.35,
       ease: 'power3.out',
@@ -70,7 +70,7 @@ export function PillNav({ items, className = '', initialLoadAnimation = true }: 
 
   return (
     <nav ref={navRef} aria-label="Primary" className={`relative rounded-full border border-black bg-white px-1 py-1 shadow-sm ${className}`}>
-      <span ref={pillRef} aria-hidden="true" className="pointer-events-none absolute inset-y-1 left-0 rounded-full bg-black shadow-soft" />
+      <span ref={pillRef} aria-hidden="true" className="pointer-events-none absolute inset-y-1 left-1 rounded-full bg-black shadow-soft" />
       <ul className="relative z-10 flex items-center gap-1" role="list">
         {items.map((item, index) => {
           const isActive = index === activeIndex

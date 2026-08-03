@@ -1,6 +1,7 @@
 import type { PatientFormState, ScanState, AnalysisResult } from '../lib/workflow'
 
 const API_BASE = import.meta.env.VITE_API_URL || '/api'
+export const API_BASE_URL = import.meta.env.VITE_API_URL ? (import.meta.env.VITE_API_URL as string).replace(/\/api$/, '') : 'http://localhost:8000'
 
 export type BackendPatientPayload = {
   name: string
@@ -47,6 +48,12 @@ export type BackendStatusResponse = {
   message: string
 }
 
+export type BackendImagePrediction = {
+  prediction: string
+  confidence: number
+  heatmapPath: string
+}
+
 export type BackendResultsResponse = {
   processId: string
   patientId: string
@@ -66,6 +73,7 @@ export type BackendResultsResponse = {
   lesionLocation: string
   signalBreakdown: Array<{ label: string; value: number }>
   generatedAt: string
+  imagePrediction?: BackendImagePrediction
 }
 
 export async function createPatientRecord(patient: PatientFormState): Promise<BackendPatientResponse> {
@@ -174,5 +182,6 @@ export function mapBackendResultsToAnalysis(results: BackendResultsResponse): An
     reportSummary: results.reportSummary || results.patientSummary,
     signalBreakdown: results.signalBreakdown || results.riskFactors.map((rf) => ({ label: rf.label, value: rf.score })),
     generatedAt: new Date(results.generatedAt).toLocaleString(),
+    imagePrediction: results.imagePrediction ?? null,
   }
 }
