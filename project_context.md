@@ -17,6 +17,14 @@ This file is the working handoff log for the NeuroAssist NeuroAssist project. It
 - Login page is the default entry point (`/`). Landing page is at `/home`.
 - Create Account page is available at `/register`.
 - Login and Create Account are standalone pages rendered outside AppShell (no Navbar, no Stepper).
+- Authentication state is managed via `AuthContext` backed by `sessionStorage`.
+- All app routes (`/home`, `/patient`, `/scan`, `/processing`, `/results`, `/report`, `/about`, `/contact`) are protected by `ProtectedRoute` — unauthenticated access redirects to `/`.
+- Navbar includes a Logout button that clears session and redirects to the Login page.
+- Visiting `/` or `/register` while already authenticated redirects to `/home`.
+- Login page uses a split-screen two-panel layout: left panel shows a full-height hero with an auto-playing fade slideshow (5 images, 2.5s interval, infinite loop) and hero text; right panel contains the login card (unchanged). Left panel is hidden on mobile.
+- Left panel hero text: "NeuroAssist" (large bold primary heading) above a slightly smaller "Clinical Decision Support Platform" and subtitle. All text has a transparent background with subtle text-shadow for readability.
+- Slideshow image captions are plain white text with no pill/box background.
+- Slideshow images are served from `public/images/` (slide1.jpg – slide5.jpg).
 
 ## What Has Been Built
 
