@@ -2,15 +2,33 @@
 
 from __future__ import annotations
 
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
 import torch
 from PIL import Image
 
-from image_ai.config import CHECKPOINT_DIR, CLASSES, DEVICE
+from image_ai.config import CHECKPOINT_DIR, CLASSES
 from image_ai.models.classifier import load_model
 from image_ai.utils.transforms import get_inference_transform
+
+
+@lru_cache(maxsize=4)
+def get_model(
+    checkpoint_path: str | Path = CHECKPOINT_DIR / "best_model.pth",
+    device: torch.device | None = None,
+) -> torch.nn.Module:
+    """Load the model once and cache it."""
+
+    runtime_device = device or torch.device(
+        "cuda" if torch.cuda.is_available() else "cpu"
+    )
+
+    return load_model(
+        checkpoint_path=checkpoint_path,
+        device=runtime_device,
+    )
 
 
 def predict(
@@ -21,8 +39,15 @@ def predict(
 ) -> dict[str, Any]:
     """Predict the class for a single image and return a structured result."""
 
-    runtime_device = device or DEVICE
-    model = load_model(checkpoint_path, device=runtime_device)
+    runtime_device = device or torch.device(
+        "cuda" if torch.cuda.is_available() else "cpu"
+    )
+
+    model = get_model(
+        checkpoint_path=checkpoint_path,
+        device=runtime_device,
+    )
+
     transform = get_inference_transform()
 
     image = Image.open(image_path).convert("RGB")

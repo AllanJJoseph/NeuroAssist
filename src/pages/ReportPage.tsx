@@ -34,11 +34,7 @@ export function ReportPage() {
   ]
 
   const downloadReport = async () => {
-    const targetId = processId || patientId || uploadId
-    if (targetId) {
-      window.open(getDownloadReportUrl(targetId), '_blank')
-      return
-    }
+    // Always generate the PDF in the browser.
 
     // Generate professional PDF in-browser using jsPDF
     const { jsPDF } = await import('jspdf')

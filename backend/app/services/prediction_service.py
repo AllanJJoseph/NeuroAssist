@@ -1,16 +1,28 @@
 from datetime import UTC, datetime
 from pathlib import Path
+from functools import lru_cache
 
 import joblib
 import pandas as pd
+from fastapi import HTTPException, status
 
 from app.schemas.common import RiskFactor, RiskLevel, StrokeType
 from app.schemas.prediction import PatientRiskRequest, PredictionResponse
 
 
 MODEL_PATH = Path(__file__).resolve().parents[2] / 'models' / 'stroke_model.pkl'
-MODEL = joblib.load(MODEL_PATH)
 MODEL_VERSION = MODEL_PATH.name
+
+
+@lru_cache(maxsize=1)
+def _get_model():
+    try:
+        return joblib.load(MODEL_PATH)
+    except FileNotFoundError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f'Stroke model file is not available at {MODEL_PATH}.',
+        ) from exc
 
 
 def _build_input_frame(patient: PatientRiskRequest) -> pd.DataFrame:
@@ -49,18 +61,20 @@ def _build_input_frame(patient: PatientRiskRequest) -> pd.DataFrame:
 def _predict_probability(input_frame: pd.DataFrame) -> float:
     """Return the positive-class probability from the trained pipeline."""
 
-    if hasattr(MODEL, 'predict_proba'):
-        probability_matrix = MODEL.predict_proba(input_frame)
+    model = _get_model()
+    if hasattr(model, 'predict_proba'):
+        probability_matrix = model.predict_proba(input_frame)
         return float(probability_matrix[0, 1])
 
-    prediction = MODEL.predict(input_frame)
+    prediction = model.predict(input_frame)
     return float(prediction[0])
 
 
 def _predict_label(input_frame: pd.DataFrame) -> int:
     """Return the model's binary prediction."""
 
-    prediction = MODEL.predict(input_frame)
+    model = _get_model()
+    prediction = model.predict(input_frame)
     return int(prediction[0])
 
 

@@ -6,14 +6,13 @@ from uuid import uuid4
 
 from fastapi import HTTPException, UploadFile, status
 
-from image_ai.config import CHECKPOINT_DIR, DEVICE
-from image_ai.models.classifier import load_model
-from image_ai.services.predictor import predict as predict_image
+from app.core.config import get_settings
+from image_ai.config import DEVICE
+from image_ai.services.predictor import get_model, predict as predict_image
 from image_ai.visualization.gradcam import generate_gradcam
 
 
-HEATMAPS_DIR = Path(__file__).resolve().parents[2] / 'uploads' / 'heatmaps'
-HEATMAPS_DIR.mkdir(parents=True, exist_ok=True)
+HEATMAPS_DIR = get_settings().heatmap_path
 
 
 def predict_saved_image(image_path: str | Path) -> dict[str, str | float]:
@@ -22,9 +21,15 @@ def predict_saved_image(image_path: str | Path) -> dict[str, str | float]:
     heatmap_filename = f'{uuid4().hex[:10]}.png'
     heatmap_path = HEATMAPS_DIR / heatmap_filename
 
-    prediction = predict_image(image_path)
-    model = load_model(CHECKPOINT_DIR / 'best_model.pth', device=DEVICE)
-    generate_gradcam(model, image_path, heatmap_path, device=DEVICE)
+    try:
+        prediction = predict_image(image_path)
+        model = get_model(device=DEVICE)
+        generate_gradcam(model, image_path, heatmap_path, device=DEVICE)
+    except FileNotFoundError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail='Image model checkpoint is not available.',
+        ) from exc
 
     return {
         'prediction': prediction['prediction'],

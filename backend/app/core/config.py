@@ -17,9 +17,12 @@ class Settings(BaseSettings):
     upload_dir: Path = Field(default=Path('uploads'))
     max_upload_mb: int = Field(default=20, ge=1, validation_alias='NEUROASSIST_MAX_UPLOAD_MB')
     cors_origins: list[str] = Field(
-        default_factory=lambda: ['http://localhost:5173', 'http://127.0.0.1:5173'],
-        validation_alias='NEUROASSIST_CORS_ORIGINS',
-    )
+    default_factory=lambda: [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "https://neuro-assist-snowy.vercel.app",
+    ],
+)
 
     @field_validator('upload_dir', mode='before')
     @classmethod
@@ -44,6 +47,12 @@ class Settings(BaseSettings):
     @property
     def upload_path(self) -> Path:
         path = (self.project_root / self.upload_dir).resolve()
+        path.mkdir(parents=True, exist_ok=True)
+        return path
+
+    @property
+    def heatmap_path(self) -> Path:
+        path = self.upload_path / 'heatmaps'
         path.mkdir(parents=True, exist_ok=True)
         return path
 

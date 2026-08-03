@@ -1,7 +1,8 @@
 import type { PatientFormState, ScanState, AnalysisResult } from '../lib/workflow'
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api'
-export const API_BASE_URL = import.meta.env.VITE_API_URL ? (import.meta.env.VITE_API_URL as string).replace(/\/api$/, '') : 'http://localhost:8000'
+const API_URL =
+  import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+export const API_BASE_URL = API_URL ? API_URL.replace(/\/api$/, '') : ''
 
 export type BackendPatientPayload = {
   name: string
@@ -93,7 +94,7 @@ export async function createPatientRecord(patient: PatientFormState): Promise<Ba
     symptoms: patient.symptoms ? patient.symptoms.split(',').map((s) => s.trim()) : [],
   }
 
-  const res = await fetch(`${API_BASE}/patient`, {
+  const res = await fetch(`${API_URL}/patient`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -116,7 +117,7 @@ export async function uploadScanFile(scan: ScanState): Promise<BackendUploadResp
   }
   formData.append('modality', scan.modality)
 
-  const res = await fetch(`${API_BASE}/upload`, {
+  const res = await fetch(`${API_URL}/upload`, {
     method: 'POST',
     body: formData,
   })
@@ -132,7 +133,7 @@ export async function initiateWorkflowProcess(
   patientId: string,
   uploadId: string
 ): Promise<BackendProcessResponse> {
-  const res = await fetch(`${API_BASE}/process`, {
+  const res = await fetch(`${API_URL}/process`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ patientId, uploadId }),
@@ -146,7 +147,7 @@ export async function initiateWorkflowProcess(
 }
 
 export async function fetchJobStatus(processId: string): Promise<BackendStatusResponse> {
-  const res = await fetch(`${API_BASE}/status/${processId}`)
+  const res = await fetch(`${API_URL}/status/${processId}`)
   if (!res.ok) {
     throw new Error(`Failed to fetch job status: ${res.statusText}`)
   }
@@ -154,7 +155,7 @@ export async function fetchJobStatus(processId: string): Promise<BackendStatusRe
 }
 
 export async function fetchResults(processId: string): Promise<BackendResultsResponse> {
-  const res = await fetch(`${API_BASE}/results/${processId}`)
+  const res = await fetch(`${API_URL}/results/${processId}`)
   if (!res.ok) {
     throw new Error(`Failed to fetch results: ${res.statusText}`)
   }
@@ -162,7 +163,7 @@ export async function fetchResults(processId: string): Promise<BackendResultsRes
 }
 
 export function getDownloadReportUrl(id: string): string {
-  return `${API_BASE}/download/${id}`
+  return `${API_URL}/download/${id}`
 }
 
 export function mapBackendResultsToAnalysis(results: BackendResultsResponse): AnalysisResult {
