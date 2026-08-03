@@ -1,7 +1,9 @@
 import type { NavigationLink } from '../types/navigation'
 
 export const ROUTES = {
-  home: '/',
+  login: '/',
+  home: '/home',
+  register: '/register',
   patient: '/patient',
   scan: '/scan',
   processing: '/processing',
