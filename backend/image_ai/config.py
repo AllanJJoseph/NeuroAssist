@@ -1,16 +1,14 @@
 from pathlib import Path
+
 import torch
 
 # Project paths
 BASE_DIR = Path(__file__).resolve().parent
-
 DATASET_DIR = BASE_DIR / "datasets" / "Brain_Stroke_CT_Dataset"
-
 CHECKPOINT_DIR = BASE_DIR / "checkpoints"
 OUTPUT_DIR = BASE_DIR / "outputs"
-
-CHECKPOINT_DIR.mkdir(exist_ok=True)
-OUTPUT_DIR.mkdir(exist_ok=True)
+TEST_IMAGES_DIR = BASE_DIR / "test_images"
+RESULTS_DIR = BASE_DIR / "results"
 
 # Image settings
 IMAGE_SIZE = 224
@@ -24,7 +22,7 @@ LEARNING_RATE = 1e-4
 CLASSES = [
     "Bleeding",
     "Ischemia",
-    "Normal"
+    "Normal",
 ]
 
 NUM_CLASSES = len(CLASSES)
