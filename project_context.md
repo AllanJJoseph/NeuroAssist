@@ -14,6 +14,9 @@ This file is the working handoff log for the NeuroAssist NeuroAssist project. It
 - The backend now includes a retrained stroke prediction pipeline under `backend/training/`.
 - The saved production model is expected at `backend/models/stroke_model.pkl`.
 - FastAPI prediction now consumes the trained pipeline directly instead of mock logic.
+- Login page is the default entry point (`/`). Landing page is at `/home`.
+- Create Account page is available at `/register`.
+- Login and Create Account are standalone pages rendered outside AppShell (no Navbar, no Stepper).
 
 ## What Has Been Built
 
@@ -27,6 +30,7 @@ This file is the working handoff log for the NeuroAssist NeuroAssist project. It
 
 Implemented the full demo flow:
 
+- Login page (No backend auth)
 - Landing page
 - Patient information form
 - Brain scan upload page
@@ -93,6 +97,7 @@ Added reusable layout and visual components in `src/components/layout/` and `src
 - [src/context/workflow-context.tsx](src/context/workflow-context.tsx)
 - [src/components/layout/AppShell.tsx](src/components/layout/AppShell.tsx)
 - [src/components/layout/PageHeader.tsx](src/components/layout/PageHeader.tsx)
+- [src/pages/LoginPage.tsx](src/pages/LoginPage.tsx)
 - [src/pages/LandingPage.tsx](src/pages/LandingPage.tsx)
 - [src/pages/PatientInfoPage.tsx](src/pages/PatientInfoPage.tsx)
 - [src/pages/ScanUploadPage.tsx](src/pages/ScanUploadPage.tsx)
