@@ -7,12 +7,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { PageHeader } from '../components/layout/PageHeader'
 import { Separator } from '../components/ui/separator'
 import { useWorkflow } from '../context/workflow-context'
+import { API_BASE_URL } from '../services/api'
 import { ROUTES } from '../utils/routes'
-import { getDownloadReportUrl, API_BASE_URL } from '../services/api'
 
 export function ReportPage() {
   const navigate = useNavigate()
-  const { analysis, patient, scan, patientId, uploadId, processId } = useWorkflow()
+  const { analysis, patient, scan } = useWorkflow()
 
   useEffect(() => {
     if (!analysis) {
