@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-pip install --upgrade pip
+python -m pip install --upgrade pip
 
-pip install \
-  torch==2.8.0 \
-  torchvision==0.23.0 \
+# Install CPU-only PyTorch first
+python -m pip install \
+  torch torchvision \
   --index-url https://download.pytorch.org/whl/cpu
 
-pip install -r requirements.txt
+# Install the rest of the dependencies
+python -m pip install -r requirements.txt
