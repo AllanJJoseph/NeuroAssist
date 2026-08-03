@@ -1,4 +1,6 @@
+# ----------------------------
 # Logs
+# ----------------------------
 logs
 *.log
 npm-debug.log*
@@ -7,16 +9,65 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# ----------------------------
+# Node / Frontend
+# ----------------------------
+node_modules/
+dist/
+dist-ssr/
 *.local
 
-# Editor directories and files
+# ----------------------------
+# Python
+# ----------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ----------------------------
+# Virtual Environments
+# ----------------------------
+.venv/
+venv/
+env/
+backend/venv/
+
+# ----------------------------
+# Environment Files
+# ----------------------------
+.env
+.env.*
+
+# ----------------------------
+# Backend Uploads
+# ----------------------------
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# ----------------------------
+# Image AI
+# ----------------------------
+
+# Ignore datasets only
+backend/image_ai/datasets/
+
+# Ignore generated outputs only
+backend/image_ai/outputs/
+
+# ----------------------------
+# Editor files
+# ----------------------------
 .vscode/*
 !.vscode/extensions.json
-.idea
+
+.idea/
 .DS_Store
+Thumbs.db
+
 *.suo
 *.ntvs*
 *.njsproj

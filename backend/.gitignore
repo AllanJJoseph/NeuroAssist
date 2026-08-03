@@ -2,24 +2,22 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+
 .venv/
 venv/
 env/
+
 .env
+
 uploads/*
 !uploads/.gitkeep
-# Image AI
+
+# Ignore datasets only
 image_ai/datasets/
-backend/image_ai/datasets/
 
-image_ai/checkpoints/
-backend/image_ai/checkpoints/
-
+# Ignore generated outputs only
 image_ai/outputs/
-backend/image_ai/outputs/
-
-*.pth
-*.pt
