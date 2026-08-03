@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { AlertTriangle, ArrowRight, ClipboardCheck, FileText, ShieldAlert } from 'lucide-react'
+import { AlertTriangle, ArrowRight, Brain, ClipboardCheck, FileText, ShieldAlert } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button'
 import { PageHeader } from '../components/layout/PageHeader'
@@ -10,6 +10,7 @@ import { RiskMeter } from '../components/visuals/RiskMeter'
 import { Separator } from '../components/ui/separator'
 import { useWorkflow } from '../context/workflow-context'
 import { ROUTES } from '../utils/routes'
+import { API_BASE_URL } from '../services/api'
 
 export function ResultsPage() {
   const navigate = useNavigate()
@@ -30,7 +31,7 @@ export function ResultsPage() {
       <PageHeader
         eyebrow="Step 4 of 6"
         title="Results dashboard"
-        description="A clinical-style view of the mock AI output, emphasizing probability, lesion context, and next considerations."
+        description="Clinical AI stroke risk assessment, imaging analysis, and Image AI prediction with Grad-CAM visualization."
         action={
           <div className="flex flex-col gap-3 sm:flex-row">
             <Button onClick={() => navigate(ROUTES.report)}>
@@ -77,7 +78,13 @@ export function ResultsPage() {
         </div>
 
         <div className="space-y-6">
-          <BrainScanPreview highlightLabel={analysis.lesionLocation} previewUrl={scan.previewUrl} />
+          <BrainScanPreview
+            highlightLabel={analysis.lesionLocation}
+            previewUrl={scan.previewUrl}
+            heatmapUrl={analysis.imagePrediction?.heatmapPath ? `${API_BASE_URL}${analysis.imagePrediction.heatmapPath}` : undefined}
+            title={analysis.imagePrediction ? 'Grad-CAM heatmap' : 'Brain scan visualization'}
+            subtitle={analysis.imagePrediction ? 'Image AI activation map' : 'AI lesion localization overlay'}
+          />
 
           <Card>
             <CardHeader>
@@ -116,6 +123,47 @@ export function ResultsPage() {
               <div className="text-sm leading-6 text-steel-600">
                 This dashboard is ready to hand off into the clinical report view or to restart the workflow for a different patient.
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Image AI Section */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Brain className="h-5 w-5" />
+                Image AI
+              </CardTitle>
+              <CardDescription>EfficientNet-B0 prediction with Grad-CAM visualization.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {analysis.imagePrediction ? (
+                <>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <Metric
+                      label="Prediction"
+                      value={analysis.imagePrediction.prediction}
+                      icon={<Brain className="h-4 w-4" />}
+                    />
+                    <Metric
+                      label="Image confidence"
+                      value={`${(analysis.imagePrediction.confidence * 100).toFixed(2)}%`}
+                      icon={<ClipboardCheck className="h-4 w-4" />}
+                    />
+                  </div>
+                  <div className="rounded-3xl border border-steel-900 bg-white p-5">
+                    <div className="text-xs font-semibold uppercase tracking-[0.18em] text-steel-500 mb-3">Grad-CAM Heatmap</div>
+                    <img
+                      src={`${API_BASE_URL}${analysis.imagePrediction.heatmapPath}`}
+                      alt="Grad-CAM Heatmap"
+                      className="w-full rounded-2xl object-contain"
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="rounded-2xl bg-steel-50 px-4 py-3 text-sm text-steel-500">
+                  Image analysis unavailable.
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
