@@ -1,6 +1,6 @@
 import { useEffect, type ReactNode } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { AlertTriangle, ArrowRight, Brain, ClipboardCheck, FileText, ShieldAlert } from 'lucide-react'
+import { AlertTriangle, ArrowRight, Brain, ClipboardCheck, FileText, ShieldAlert, Send } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button'
 import { PageHeader } from '../components/layout/PageHeader'
@@ -9,12 +9,17 @@ import { ContributionBars } from '../components/visuals/ContributionBars'
 import { RiskMeter } from '../components/visuals/RiskMeter'
 import { Separator } from '../components/ui/separator'
 import { useWorkflow } from '../context/workflow-context'
+import { useStrokeOnset } from '../context/stroke-onset-context'
+import { StrokeClock } from '../components/StrokeClock'
+import { TransferStatusTimeline } from '../components/TransferStatusTimeline'
+import { getTransfers } from '../lib/registry'
 import { ROUTES } from '../utils/routes'
 import { API_BASE_URL } from '../services/api'
 
 export function ResultsPage() {
   const navigate = useNavigate()
   const { analysis, patient, scan } = useWorkflow()
+  const { strokeOnsetTime } = useStrokeOnset()
 
   useEffect(() => {
     if (!analysis) {
@@ -25,6 +30,10 @@ export function ResultsPage() {
   if (!analysis) {
     return <Navigate to={ROUTES.patient} replace />
   }
+
+  const existingTransfer = getTransfers().find(
+    (t) => t.patientSnapshot.name === patient.name && t.patientSnapshot.age === patient.age,
+  )
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
@@ -41,6 +50,13 @@ export function ResultsPage() {
           </div>
         }
       />
+
+      {/* FEATURE 4: Stroke Clock Widget if onset time present */}
+      {strokeOnsetTime && (
+        <div className="mt-6">
+          <StrokeClock onsetTime={strokeOnsetTime} />
+        </div>
+      )}
 
       <div className="mt-8 grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
         <div className="space-y-6">
@@ -123,6 +139,52 @@ export function ResultsPage() {
               <div className="text-sm leading-6 text-steel-600">
                 This dashboard is ready to hand off into the clinical report view or to restart the workflow for a different patient.
               </div>
+            </CardContent>
+          </Card>
+
+          {/* FEATURE 9, 10: Hospital Transfer Status Section */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <Send className="h-5 w-5" />
+                  Hospital Transfer Status
+                </CardTitle>
+                <Button size="sm" variant="outline" onClick={() => navigate(ROUTES.report)}>
+                  Transfer Patient
+                </Button>
+              </div>
+              <CardDescription>Track referral to receiving hospital</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {existingTransfer ? (
+                <>
+                  <div className="rounded-2xl border border-steel-900 bg-white p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-semibold text-steel-900">
+                        {existingTransfer.status === 'Accepted'
+                          ? `Accepted by ${existingTransfer.receivingHospital}`
+                          : existingTransfer.status === 'Viewed'
+                          ? `Viewed by ${existingTransfer.receivingHospital}`
+                          : existingTransfer.status === 'Received'
+                          ? `Received by ${existingTransfer.receivingHospital}`
+                          : `Transfer sent to ${existingTransfer.receivingHospital}`}
+                      </span>
+                      <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-steel-100 text-steel-800">
+                        {existingTransfer.status}
+                      </span>
+                    </div>
+                    <div className="mt-1 text-xs text-steel-500">
+                      Doctor: {existingTransfer.receivingDoctor} · Priority: {existingTransfer.priority}
+                    </div>
+                  </div>
+                  <TransferStatusTimeline transfer={existingTransfer} />
+                </>
+              ) : (
+                <div className="rounded-2xl bg-steel-50 p-4 text-center text-sm text-steel-500">
+                  No transfer initiated yet. Generate report to initiate hospital transfer.
+                </div>
+              )}
             </CardContent>
           </Card>
 

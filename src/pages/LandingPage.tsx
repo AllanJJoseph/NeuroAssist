@@ -1,10 +1,46 @@
-import { ArrowRight, Brain, FileScan, Sparkles, Stethoscope } from 'lucide-react'
+import { ArrowRight, Brain, FileScan, Sparkles, Stethoscope, Users, Activity, Send, Building2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { useWorkflow } from '../context/workflow-context'
 import { ROUTES } from '../utils/routes'
+
+const dashboardCards = [
+  {
+    title: 'Patient Registry',
+    description: 'Manage EHR records, add/edit patients, and import into stroke evaluation.',
+    icon: Users,
+    path: ROUTES.registry,
+    badge: 'EHR',
+    action: 'Open Registry',
+  },
+  {
+    title: 'Stroke Prediction',
+    description: 'Start structured intake, upload CT/MRI scan, and trigger AI prediction.',
+    icon: Activity,
+    path: ROUTES.patient,
+    badge: 'AI Pipeline',
+    action: 'Start Analysis',
+    isStart: true,
+  },
+  {
+    title: 'Transfer Status',
+    description: 'Track outgoing hospital transfers, doctor views, and acceptance status.',
+    icon: Send,
+    path: ROUTES.transfers,
+    badge: 'Referrals',
+    action: 'View Status',
+  },
+  {
+    title: 'Apollo Portal',
+    description: 'Simulated receiving hospital portal for incoming emergency referrals.',
+    icon: Building2,
+    path: ROUTES.apolloLogin,
+    badge: 'Receiving Site',
+    action: 'Open Portal',
+  },
+]
 
 const highlights = [
   {
@@ -35,6 +71,56 @@ export function LandingPage() {
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col gap-12 px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+      {/* Hospital Dashboard Hub */}
+      <section className="space-y-6">
+        <div className="flex flex-col gap-2">
+          <Badge className="w-fit">Aster Hospital · Clinical Decision Support Hub</Badge>
+          <h2 className="text-3xl font-semibold tracking-tight text-steel-900">Hospital Dashboard</h2>
+          <p className="text-sm text-steel-600">Select a module to manage patients, run stroke risk assessments, or monitor hospital transfers.</p>
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {dashboardCards.map((card) => (
+            <Card
+              key={card.title}
+              className="group flex flex-col justify-between border-steel-200 bg-white transition hover:border-steel-900 hover:shadow-card cursor-pointer"
+              onClick={() => {
+                if (card.isStart) handleStart()
+                else navigate(card.path)
+              }}
+            >
+              <CardHeader className="space-y-3 p-5">
+                <div className="flex items-center justify-between">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-steel-900 bg-steel-50 text-steel-900 transition group-hover:bg-steel-900 group-hover:text-white">
+                    <card.icon className="h-5 w-5" />
+                  </div>
+                  <Badge variant="secondary">{card.badge}</Badge>
+                </div>
+                <div>
+                  <CardTitle className="text-lg">{card.title}</CardTitle>
+                  <CardDescription className="mt-1 text-xs leading-5 text-steel-600">{card.description}</CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent className="p-5 pt-0">
+                <Button
+                  size="sm"
+                  variant={card.isStart ? 'default' : 'outline'}
+                  className="w-full justify-between"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    if (card.isStart) handleStart()
+                    else navigate(card.path)
+                  }}
+                >
+                  <span>{card.action}</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
       <section className="relative overflow-hidden rounded-[2rem] border border-steel-900 bg-white px-6 py-10 shadow-card sm:px-10 sm:py-12 lg:px-14 lg:py-16">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(0,0,0,0.06),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(0,0,0,0.04),transparent_28%)]" />
 
@@ -54,6 +140,9 @@ export function LandingPage() {
               <Button size="lg" onClick={handleStart}>
                 Start Analysis
                 <ArrowRight className="h-4 w-4" />
+              </Button>
+              <Button size="lg" variant="outline" onClick={() => navigate(ROUTES.registry)}>
+                Patient Registry
               </Button>
             </div>
 

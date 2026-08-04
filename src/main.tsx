@@ -5,14 +5,17 @@ import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './context/auth-context'
 import { WorkflowProvider } from './context/workflow-context'
+import { StrokeOnsetProvider } from './context/stroke-onset-context'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <WorkflowProvider>
-          <App />
-        </WorkflowProvider>
+        <StrokeOnsetProvider>
+          <WorkflowProvider>
+            <App />
+          </WorkflowProvider>
+        </StrokeOnsetProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>,

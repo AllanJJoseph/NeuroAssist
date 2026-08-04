@@ -6,12 +6,15 @@ import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Progress } from '../components/ui/progress'
 import { useWorkflow } from '../context/workflow-context'
+import { useStrokeOnset } from '../context/stroke-onset-context'
+import { StrokeClock } from '../components/StrokeClock'
 import { ROUTES } from '../utils/routes'
 
 export function ScanUploadPage() {
   const navigate = useNavigate()
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const { scan, updateScanField } = useWorkflow()
+  const { strokeOnsetTime } = useStrokeOnset()
   const [localPreview, setLocalPreview] = useState<string>(scan.previewUrl)
   const [uploadProgress, setUploadProgress] = useState(scan.uploadProgress)
   const [dragActive, setDragActive] = useState(false)
@@ -154,6 +157,8 @@ export function ScanUploadPage() {
               <Row label="Estimated status">{scan.fileName ? 'Ready for analysis' : 'Pending file upload'}</Row>
             </CardContent>
           </Card>
+
+          <StrokeClock onsetTime={strokeOnsetTime} />
 
           <Card className="overflow-hidden">
             <div className="bg-steel-950 px-6 py-4 text-white">

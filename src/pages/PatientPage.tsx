@@ -1,5 +1,6 @@
 import { useMemo, useState, type FormEvent, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { UserCheck, Download, ChevronDown, ChevronUp } from 'lucide-react'
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
@@ -10,6 +11,9 @@ import { Separator } from '../components/ui/separator'
 import { Textarea } from '../components/ui/textarea'
 import { symptomOptions } from '../lib/workflow'
 import { useWorkflow } from '../context/workflow-context'
+import { useStrokeOnset } from '../context/stroke-onset-context'
+import { StrokeClock } from '../components/StrokeClock'
+import { getRegistry, registryPatientToFormState, type RegistryPatient } from '../lib/registry'
 import { ROUTES } from '../utils/routes'
 
 const patientFieldGrid = 'grid gap-5 md:grid-cols-2'
@@ -17,9 +21,27 @@ const patientFieldGrid = 'grid gap-5 md:grid-cols-2'
 export function PatientPage() {
   const navigate = useNavigate()
   const { patient, updatePatientField } = useWorkflow()
+  const { strokeOnsetTime, setStrokeOnsetTime } = useStrokeOnset()
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>(() =>
     patient.symptoms.split(',').map((item) => item.trim()).filter(Boolean),
   )
+
+  const [importOpen, setImportOpen] = useState(false)
+  const [registrySearch, setRegistrySearch] = useState('')
+  const registryPatients = useMemo(() => getRegistry(), [])
+  const filteredRegistry = useMemo(
+    () => registryPatients.filter((p) => p.name.toLowerCase().includes(registrySearch.toLowerCase())),
+    [registryPatients, registrySearch],
+  )
+
+  const handleImportPatient = (rp: RegistryPatient) => {
+    const formState = registryPatientToFormState(rp)
+    const keys = Object.keys(formState) as (keyof typeof formState)[]
+    keys.forEach((k) => updatePatientField(k, formState[k] as never))
+    setSelectedSymptoms(rp.symptoms.split(',').map((item) => item.trim()).filter(Boolean))
+    setStrokeOnsetTime(rp.strokeOnsetTime || '')
+    setImportOpen(false)
+  }
 
   const symptomText = useMemo(() => selectedSymptoms.join(', '), [selectedSymptoms])
 
@@ -50,7 +72,62 @@ export function PatientPage() {
         </div>
       </div>
 
-      <form className="mt-8 space-y-6" onSubmit={submitForm}>
+      {/* FEATURE 3: Import Patient Section */}
+      <Card className="mt-6 border-dashed border-steel-400 bg-steel-50/50">
+        <CardHeader className="py-4">
+          <div className="flex items-center justify-between cursor-pointer" onClick={() => setImportOpen(!importOpen)}>
+            <div className="flex items-center gap-2">
+              <Download className="h-4 w-4 text-steel-700" />
+              <CardTitle className="text-base font-semibold text-steel-900">Import Patient from Registry</CardTitle>
+              {registryPatients.length > 0 && (
+                <Badge variant="secondary">{registryPatients.length} saved</Badge>
+              )}
+            </div>
+            <Button type="button" variant="ghost" size="sm">
+              {importOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </Button>
+          </div>
+        </CardHeader>
+        {importOpen && (
+          <CardContent className="pt-0 space-y-4">
+            <Input
+              placeholder="Search patient by name..."
+              value={registrySearch}
+              onChange={(e) => setRegistrySearch(e.target.value)}
+              className="bg-white"
+            />
+            {filteredRegistry.length === 0 ? (
+              <div className="text-xs text-steel-500 py-2">
+                No patients found in registry. Go to Patient Registry to register new patients.
+              </div>
+            ) : (
+              <div className="grid gap-2 max-h-48 overflow-y-auto pr-1">
+                {filteredRegistry.map((rp) => (
+                  <button
+                    key={rp.id}
+                    type="button"
+                    onClick={() => handleImportPatient(rp)}
+                    className="flex items-center justify-between rounded-xl border border-steel-200 bg-white p-3 text-left transition hover:border-steel-900 hover:bg-steel-50"
+                  >
+                    <div>
+                      <div className="font-semibold text-sm text-steel-900">{rp.name}</div>
+                      <div className="text-xs text-steel-500">
+                        {rp.age}y · {rp.gender} · {rp.bloodGroup} · BP {rp.systolic}/{rp.diastolic}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-xs font-semibold text-steel-900 shrink-0">
+                      <UserCheck className="h-3.5 w-3.5" />
+                      Load Patient
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        )}
+      </Card>
+
+      <form className="mt-6 space-y-6" onSubmit={submitForm}>
         <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
           <Card>
             <CardHeader>
@@ -110,6 +187,19 @@ export function PatientPage() {
                   <Toggle label="Previous stroke" checked={patient.previousStroke} onChange={(checked) => updatePatientField('previousStroke', checked)} />
                 </div>
               </div>
+
+              {/* FEATURE 2: Stroke Onset Time Field */}
+              <Separator />
+              <Field label="Stroke Onset Time (Date & Time)">
+                <div className="relative">
+                  <Input
+                    type="datetime-local"
+                    value={strokeOnsetTime ? strokeOnsetTime.slice(0, 16) : ''}
+                    onChange={(e) => setStrokeOnsetTime(e.target.value ? new Date(e.target.value).toISOString() : '')}
+                  />
+                </div>
+                <p className="text-xs text-steel-500">Leave blank if onset time is unknown. Used to calculate dynamic stroke elapsed time.</p>
+              </Field>
             </CardContent>
           </Card>
 
@@ -181,6 +271,9 @@ export function PatientPage() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* FEATURE 4: Live Stroke Clock Widget */}
+            <StrokeClock onsetTime={strokeOnsetTime} />
           </div>
         </div>
 
